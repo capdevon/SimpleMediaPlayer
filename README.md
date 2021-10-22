@@ -11,3 +11,7 @@ Some graphic effects don't work, I don't have the necessary knowledge to fix sha
 * mediaPlayer.getEffectManager().enableGrainEffect(true); //doesn't work
 * mediaPlayer.getEffectManager().enableVignetteEffect(true); //doesn't work
 * mediaPlayer.getEffectManager().enableCRTEffect(true); //doesn't work
+
+
+## Credits
+All files under the 'resources' folder belong to polincdev.
