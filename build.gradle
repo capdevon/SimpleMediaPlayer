@@ -1,0 +1,125 @@
+plugins {
+    id 'java-library'
+    id 'application'
+    id 'eclipse'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
+}
+
+javafx {
+    version = '17'
+    modules = [
+        'javafx.base',
+        'javafx.controls',
+        'javafx.fxml',
+        'javafx.swing',
+        'javafx.media'
+    ]
+}
+
+description = 'JME Video Player'
+mainClassName='mygame.Test_MovieState'
+
+// select one source-code (JDK) option:
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+// select one version of the Engine:
+ext.jmonkeyengineVersion = '3.4.0-stable' // from mavenCentral
+
+repositories {
+    //mavenLocal()
+    mavenCentral()
+    maven { url 'https://jcenter.bintray.com/' }
+    maven { url 'http://nifty-gui.sourceforge.net/nifty-maven-repo' }
+    //google()
+
+    // Read more about repositories here:
+    //   https://docs.gradle.org/current/userguide/dependency_management.html#sec:repositories
+}
+
+//project(":assets") {
+//    apply plugin: "java"
+//    buildDir = rootProject.file("build/assets")
+//
+//    sourceSets {
+//        main {
+//            resources {
+//                srcDir '.'
+//            }
+//        }
+//    }
+//}
+
+dependencies {
+    // You can read more about how to add dependencies here:
+    //   https://docs.gradle.org/current/userguide/dependency_management.html#sec:how_to_declare_your_dependencies
+
+    // from mavenCentral (or mavenLocal) repositories:
+    implementation 'org.jmonkeyengine:jme3-core:' + jmonkeyengineVersion
+    implementation 'org.jmonkeyengine:jme3-desktop:' + jmonkeyengineVersion
+    implementation 'org.jmonkeyengine:jme3-effects:' + jmonkeyengineVersion
+    //implementation 'org.jmonkeyengine:jme3-networking:' + jmonkeyengineVersion
+    implementation 'org.jmonkeyengine:jme3-niftygui:' + jmonkeyengineVersion
+    implementation 'org.jmonkeyengine:jme3-terrain:' + jmonkeyengineVersion
+
+    // select one version of LWJGL (from mavenCentral or mavenLocal)
+    runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmonkeyengineVersion  // LWJGL 2.x
+    //runtimeOnly 'org.jmonkeyengine:jme3-lwjgl3:' + jmonkeyengineVersion // LWJGL 3.x
+
+    // BasicGame doesn't use physics. If your game needs physics, select either:
+    //    1. Minie
+    //implementation 'com.github.stephengold:Minie:4.3.0'
+    // OR
+    //    2. jme3-jbullet
+    //implementation 'org.jmonkeyengine:jme3-jbullet:' + jmonkeyengineVersion
+
+    // BasicGame doesn't use jme3-jogg or jme3-plugins
+    //  -- they are included solely to avoid warnings from AssetConfig
+    runtimeOnly 'org.jmonkeyengine:jme3-jogg:' + jmonkeyengineVersion
+    runtimeOnly 'org.jmonkeyengine:jme3-plugins:' + jmonkeyengineVersion
+
+    // libraries related to the Lemur GUI and Groovy:
+    //implementation 'com.simsilica:lemur:1.15.0'
+    //implementation 'com.simsilica:lemur-props:1.1.1'
+    //implementation 'com.simsilica:lemur-proto:1.12.0'
+    //runtimeOnly 'org.codehaus.groovy:groovy-jsr223:3.0.8'
+
+    // other libraries:
+    //implementation 'com.github.stephengold:Heart:7.1.0'
+    //implementation 'com.simsilica:sim-math:1.4.1'
+    //runtimeOnly 'org.jmonkeyengine:jme3-testdata:' + jmonkeyengineVersion
+    runtimeOnly 'org.jmonkeyengine:jme3-testdata:3.4.0-alpha6'
+
+    //compile fileTree(dir: 'libs', include: '*.jar')
+    
+}
+
+//task createDirs(type: Wrapper) {
+//
+//    def dirs = [
+//        file("./assets/Interface"),
+//        file("./assets/MatDefs"),
+//        file("./assets/Materials"),
+//        file("./assets/Models"),
+//        file("./assets/Scenes"),
+//        file("./assets/Shaders"),
+//        file("./assets/Sounds"),
+//        file("./assets/Textures"),
+//    ]
+//
+//    dirs.each {
+//        if( !it.exists() ) {
+//            println "Creating " + it
+//            it.mkdirs()
+//        }
+//        if( it.listFiles().length == 0 ) {
+//            def stub = new File(it, 'removeme.txt')
+//            println "Creating stub file to allow git checkin, file:$stub"
+//            stub.text = "Remove me when there are files here."
+//        }
+//    }
+//
+//}
+
+
+
