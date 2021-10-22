@@ -1,23 +1,9 @@
 plugins {
     id 'java-library'
     id 'application'
-    id 'eclipse'
-    id 'org.openjfx.javafxplugin' version '0.0.10'
 }
 
-javafx {
-    version = '17'
-    modules = [
-        'javafx.base',
-        'javafx.controls',
-        'javafx.fxml',
-        'javafx.swing',
-        'javafx.media'
-    ]
-}
-
-description = 'JME Video Player'
-mainClassName='mygame.Test_MovieState'
+description = 'Simple Media Player for jMonkeyEngine'
 
 // select one source-code (JDK) option:
 sourceCompatibility = '1.8'
@@ -37,19 +23,6 @@ repositories {
     //   https://docs.gradle.org/current/userguide/dependency_management.html#sec:repositories
 }
 
-//project(":assets") {
-//    apply plugin: "java"
-//    buildDir = rootProject.file("build/assets")
-//
-//    sourceSets {
-//        main {
-//            resources {
-//                srcDir '.'
-//            }
-//        }
-//    }
-//}
-
 dependencies {
     // You can read more about how to add dependencies here:
     //   https://docs.gradle.org/current/userguide/dependency_management.html#sec:how_to_declare_your_dependencies
@@ -59,8 +32,8 @@ dependencies {
     implementation 'org.jmonkeyengine:jme3-desktop:' + jmonkeyengineVersion
     implementation 'org.jmonkeyengine:jme3-effects:' + jmonkeyengineVersion
     //implementation 'org.jmonkeyengine:jme3-networking:' + jmonkeyengineVersion
-    implementation 'org.jmonkeyengine:jme3-niftygui:' + jmonkeyengineVersion
-    implementation 'org.jmonkeyengine:jme3-terrain:' + jmonkeyengineVersion
+    //implementation 'org.jmonkeyengine:jme3-niftygui:' + jmonkeyengineVersion
+    //implementation 'org.jmonkeyengine:jme3-terrain:' + jmonkeyengineVersion
 
     // select one version of LWJGL (from mavenCentral or mavenLocal)
     runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmonkeyengineVersion  // LWJGL 2.x
@@ -88,38 +61,4 @@ dependencies {
     //implementation 'com.github.stephengold:Heart:7.1.0'
     //implementation 'com.simsilica:sim-math:1.4.1'
     //runtimeOnly 'org.jmonkeyengine:jme3-testdata:' + jmonkeyengineVersion
-    runtimeOnly 'org.jmonkeyengine:jme3-testdata:3.4.0-alpha6'
-
-    //compile fileTree(dir: 'libs', include: '*.jar')
-    
 }
-
-//task createDirs(type: Wrapper) {
-//
-//    def dirs = [
-//        file("./assets/Interface"),
-//        file("./assets/MatDefs"),
-//        file("./assets/Materials"),
-//        file("./assets/Models"),
-//        file("./assets/Scenes"),
-//        file("./assets/Shaders"),
-//        file("./assets/Sounds"),
-//        file("./assets/Textures"),
-//    ]
-//
-//    dirs.each {
-//        if( !it.exists() ) {
-//            println "Creating " + it
-//            it.mkdirs()
-//        }
-//        if( it.listFiles().length == 0 ) {
-//            def stub = new File(it, 'removeme.txt')
-//            println "Creating stub file to allow git checkin, file:$stub"
-//            stub.text = "Remove me when there are files here."
-//        }
-//    }
-//
-//}
-
-
-
