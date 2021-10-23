@@ -17,7 +17,7 @@ public class MediaConfig {
     
     //Playback mode. Play once or loop
     public PlaybackMode playBackMode = PlaybackMode.ONCE;
-    //Original movie dimentions - relevant only for keeping aspect ratio
+    //Original movie dimensions - relevant only for keeping aspect ratio
     public int movieWidth;
     public int movieHeight;
     public float zoomingFactor = 1f;
