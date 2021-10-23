@@ -56,7 +56,6 @@ public class MediaAppState extends BaseAppState {
         mediaPlayer.setListener(new VideoScreenAdapter() {
             @Override
             public void onEnd(String screenName) {
-                LOGGER.log(Level.INFO, "Media event onEnd: {0}", screenName);
                 isStopped = true;
             }
         });
