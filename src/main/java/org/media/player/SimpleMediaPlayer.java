@@ -67,6 +67,7 @@ public class SimpleMediaPlayer {
     private int prevFrameIndex = -1;
     private boolean running = false;
     
+    private VideoCodec m_videoCodec = new VideoMjpegCodec();
     //Internal listener 
     private VideoScreenListener videoScreenListener = null;
     
@@ -541,9 +542,8 @@ public class SimpleMediaPlayer {
         public void run() {
             //Video file stream  
             InputStream videoStream = openAsset(videoAssetPath);
-            VideoMjpegCodec videoMjpegCodec = new VideoMjpegCodec();
             //read all frames at once
-            videoMjpegCodec.read(videoStream, frames);
+            m_videoCodec.read(videoStream, frames);
         }
 
         private InputStream openAsset(String name) {
