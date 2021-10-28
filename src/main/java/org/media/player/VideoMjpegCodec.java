@@ -38,7 +38,7 @@ public class VideoMjpegCodec implements VideoCodec {
                 ret.add(data);
             }
         } catch (IOException e) {
-        	e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -54,7 +54,7 @@ public class VideoMjpegCodec implements VideoCodec {
                 return readJpegData(in, EOI);
             }
         } catch (IOException e) {
-        	e.printStackTrace();
+            e.printStackTrace();
         }
         return null;
     }
