@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  */
-public class VideoMjpegCodec {
+public class VideoMjpegCodec implements VideoCodec {
     
     // start of image
     public static final byte SOI = (byte) 0xD8;
@@ -26,6 +26,7 @@ public class VideoMjpegCodec {
      * @param streamIn
      * @param ret 
      */
+    @Override
     public void read(InputStream streamIn, List<byte[]> ret) {
         // read the whole movie in at once to make it faster
         try {
@@ -37,6 +38,7 @@ public class VideoMjpegCodec {
                 ret.add(data);
             }
         } catch (IOException e) {
+        	e.printStackTrace();
         }
     }
 
@@ -52,6 +54,7 @@ public class VideoMjpegCodec {
                 return readJpegData(in, EOI);
             }
         } catch (IOException e) {
+        	e.printStackTrace();
         }
         return null;
     }
