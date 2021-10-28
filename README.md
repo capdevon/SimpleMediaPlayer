@@ -12,6 +12,12 @@ mediaPlayer.getEffectManager().enableLineEffect(true); //doesn't work
 mediaPlayer.getEffectManager().enableGrainEffect(true); //doesn't work
 mediaPlayer.getEffectManager().enableVignetteEffect(true); //doesn't work
 mediaPlayer.getEffectManager().enableCRTEffect(true); //doesn't work
+
+mediaPlayer.getEffectManager().enableLCDEffect(true); //ok
+mediaPlayer.getEffectManager().enableVHSEffect(true); //ok
+mediaPlayer.getEffectManager().enableScanlineEffect(true); //ok
+mediaPlayer.getEffectManager().enableGlitchEffect(true); //ok
+mediaPlayer.getEffectManager().enableBlackAndWhiteEffect(true); //ok
 ```
 
 ## Credits
