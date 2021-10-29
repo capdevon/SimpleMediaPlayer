@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.media.player;
 
 import com.jme3.app.Application;
@@ -37,7 +32,7 @@ public class MediaPlayerFactory {
      */
     public SimpleMediaPlayer createMediaPlayer(MediaConfig config) {
 
-        //Calculates dimentions of the geometry
+        //Calculates dimensions of the geometry
         int width = app.getCamera().getWidth();
         int height = app.getCamera().getHeight();
         float zoomingFactor = config.zoomingFactor;
