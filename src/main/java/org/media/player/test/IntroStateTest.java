@@ -119,7 +119,7 @@ public class IntroStateTest extends SimpleApplication {
             hintText = new BitmapText(font);
             hintText.setSize(font.getCharSet().getRenderedSize() * 3.0f);
             hintText.setColor(ColorRGBA.Red);
-            hintText.setText("MAIN MENU STATE");
+            hintText.setText("GAME MENU");
             hintText.setLocalTranslation(20, 400, 1.0f);
             
             Box boxMesh = new Box(1f, 1f, 1f);
