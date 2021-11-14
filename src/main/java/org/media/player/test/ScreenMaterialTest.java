@@ -71,7 +71,7 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
         scene = (Node) sp.getChild("Scene");
         rootNode.attachChild(scene);
         
-        //Shdows
+        //Shadows
         scene.getChild("Room").setShadowMode(ShadowMode.Receive); // The wall can cast shadows and also receive them.
         scene.getChild("TV").setShadowMode(ShadowMode.CastAndReceive); // Any shadows cast by the floor would be hidden by it.
         scene.getChild("Table").setShadowMode(ShadowMode.CastAndReceive);
