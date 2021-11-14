@@ -87,10 +87,9 @@ public class IntroStateTest extends SimpleApplication {
     }
     
     /**
-     * Method to switch between player and other screen/state. If BaseAppState
-     * is not used attach and dettach instead of enable/disable
+     * Method to switch between player and other screen/state.
      */
-    void switchFromIntroToMenu() {
+    private void switchFromIntroToMenu() {
         stateManager.detach(introState);
         stateManager.attach(menuState);
     }
