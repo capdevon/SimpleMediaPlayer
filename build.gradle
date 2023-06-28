@@ -10,7 +10,7 @@ sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
 // select one version of the Engine:
-ext.jmeVersion = '3.5.2-stable' // from mavenCentral
+ext.jmeVersion = '3.6.1-stable' // from mavenCentral
 
 gradle.projectsEvaluated {
     tasks.withType(JavaCompile) { // compile-time options:
@@ -56,8 +56,8 @@ dependencies {
     //implementation 'org.jmonkeyengine:jme3-terrain:' + jmeVersion
 
     // select one version of LWJGL (from mavenCentral or mavenLocal)
-    runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmeVersion  // LWJGL 2.x
-    //runtimeOnly 'org.jmonkeyengine:jme3-lwjgl3:' + jmeVersion // LWJGL 3.x
+    //runtimeOnly 'org.jmonkeyengine:jme3-lwjgl:' + jmeVersion  // LWJGL 2.x
+    runtimeOnly 'org.jmonkeyengine:jme3-lwjgl3:' + jmeVersion // LWJGL 3.x
 
     runtimeOnly 'org.jmonkeyengine:jme3-jogg:' + jmeVersion
     runtimeOnly 'org.jmonkeyengine:jme3-plugins:' + jmeVersion
