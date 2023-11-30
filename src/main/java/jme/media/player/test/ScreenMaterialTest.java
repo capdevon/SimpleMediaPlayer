@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package jme.media.player.test;
 
 import com.jme3.app.SimpleApplication;
@@ -131,10 +126,10 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
         viewPort.setBackgroundColor(ColorRGBA.Gray);
         
         //Light
-        DirectionalLight sun = new DirectionalLight();
-        sun.setColor(ColorRGBA.White.mult(1.5f));
-        sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
-        root.addLight(sun);
+        DirectionalLight sunLight = new DirectionalLight();
+        sunLight.setColor(ColorRGBA.White.mult(1.5f));
+        sunLight.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
+        root.addLight(sunLight);
 
         pointLight = new PointLight();
         pointLight.setColor(ColorRGBA.White.mult(2.5f));
@@ -143,7 +138,7 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
         root.addLight(pointLight);
 
         DirectionalLightShadowFilter dlsf = new DirectionalLightShadowFilter(assetManager, 1024, 3);
-        dlsf.setLight(sun);
+        dlsf.setLight(sunLight);
         dlsf.setEnabled(true);
 
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
@@ -167,8 +162,8 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
         inputManager.addListener(this, TOGGLE_PAUSE, RELOAD_MEDIA);
     }
     
-    private final String TOGGLE_PAUSE = "TOGGLE_PAUSE";
-    private final String RELOAD_MEDIA = "RELOAD_MEDIA";
+    private static final String TOGGLE_PAUSE = "TOGGLE_PAUSE";
+    private static final String RELOAD_MEDIA = "RELOAD_MEDIA";
 
     @Override
     public void onAction(String name, boolean isPressed, float tpf) {
@@ -179,7 +174,7 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
 
         if (name.equals(TOGGLE_PAUSE)) {
             if (mediaPlayer.isLoaded() && mediaPlayer.isPlaying()) {
-                //enable    
+                // enable
                 if (mediaPlayer.isPaused()) {
                     mediaPlayer.unpauseMedia();
                 } else {
@@ -200,7 +195,7 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
 
         mediaPlayer.update(tpf);
 
-        //Silly blinking screen effect
+        // Silly blinking screen effect
         if (mediaPlayer.isPlaying() && !mediaPlayer.isPaused()) {
             float radius = oscillate(pointLight.getRadius(), 10f, 12f, tpf);
             pointLight.setRadius(radius);
