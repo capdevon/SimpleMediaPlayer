@@ -1,4 +1,4 @@
-package org.media.player;
+package jme.media.player;
 
 import java.io.InputStream;
 import java.util.List;

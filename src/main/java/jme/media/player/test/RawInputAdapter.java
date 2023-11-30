@@ -1,4 +1,4 @@
-package org.media.player.test;
+package jme.media.player.test;
 
 import com.jme3.input.RawInputListener;
 import com.jme3.input.event.JoyAxisEvent;

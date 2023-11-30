@@ -3,12 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.media.player.test;
-
-import org.media.player.MediaConfig;
-import org.media.player.MediaPlayerFactory;
-import org.media.player.SimpleMediaPlayer;
-import org.media.player.VideoScreenAdapter;
+package jme.media.player.test;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapFont;
@@ -28,6 +23,11 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.shadow.DirectionalLightShadowFilter;
 import com.jme3.system.AppSettings;
+
+import jme.media.player.MediaConfig;
+import jme.media.player.MediaPlayerFactory;
+import jme.media.player.SimpleMediaPlayer;
+import jme.media.player.VideoScreenAdapter;
 
 /**
  * Test to show how to use MediaPlayer.

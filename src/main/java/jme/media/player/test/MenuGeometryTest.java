@@ -1,12 +1,8 @@
-package org.media.player.test;
+package jme.media.player.test;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import org.media.player.MediaConfig;
-import org.media.player.MediaPlayerFactory;
-import org.media.player.SimpleMediaPlayer;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapFont;
@@ -16,6 +12,10 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.system.AppSettings;
+
+import jme.media.player.MediaConfig;
+import jme.media.player.MediaPlayerFactory;
+import jme.media.player.SimpleMediaPlayer;
 
 /**
  * Test to show how to use MediaPlayer.

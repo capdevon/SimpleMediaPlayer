@@ -1,4 +1,4 @@
-package org.media.player;
+package jme.media.player;
 
 import com.jme3.app.Application;
 import com.jme3.material.Material;

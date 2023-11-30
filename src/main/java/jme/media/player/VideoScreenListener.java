@@ -1,4 +1,4 @@
-package org.media.player;
+package jme.media.player;
 
 /**
  * Listener for media events. You can use only one setListener. Marks key

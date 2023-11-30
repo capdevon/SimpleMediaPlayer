@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.media.player;
-
-import org.media.player.SimpleMediaPlayer.PlaybackMode;
+package jme.media.player;
 
 import com.jme3.math.ColorRGBA;
+
+import jme.media.player.SimpleMediaPlayer.PlaybackMode;
 
 /**
  *

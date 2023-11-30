@@ -3,11 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.media.player.test;
-
-import org.media.player.MediaAppState;
-import org.media.player.MediaConfig;
-import org.media.player.SimpleMediaPlayer;
+package jme.media.player.test;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
@@ -20,6 +16,10 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
+
+import jme.media.player.MediaAppState;
+import jme.media.player.MediaConfig;
+import jme.media.player.SimpleMediaPlayer;
 
 /**
  * Test to show how to use MediaPlayer as intro or cutscene/outro.
