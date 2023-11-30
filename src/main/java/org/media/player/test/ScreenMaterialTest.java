@@ -81,7 +81,7 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
 
         //-------------------PLAYER-------------------
         mediaPlayer = createMediaPlayer();
-        mediaPlayer.setListener(new VideoScreenAdapter() {});
+        mediaPlayer.setVideoScreenListener(new VideoScreenAdapter() {});
         Material modelMat = mediaPlayer.getMaterial();
         //Effects
 //        mediaPlayer.getEffectManager().enableScanlineEffect(true);

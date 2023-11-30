@@ -50,18 +50,18 @@ public class MJPEGGenerator {
      *
      * - size of file minus "RIFF & 4 byte file size"
      */
-    int width = 0;
-    int height = 0;
-    double framerate = 0;
-    int numFrames = 0;
-    File aviFile = null;
-    FileOutputStream aviOutput = null;
-    FileChannel aviChannel = null;
+    private int width = 0;
+    private int height = 0;
+    private double framerate = 0;
+    private int numFrames = 0;
+    private File aviFile = null;
+    private FileOutputStream aviOutput = null;
+    private FileChannel aviChannel = null;
 
-    long riffOffset = 0;
-    long aviMovieOffset = 0;
+    private long riffOffset = 0;
+    private long aviMovieOffset = 0;
 
-    AVIIndexList indexlist = null;
+    private AVIIndexList indexlist = null;
     
     /**
      * Creates a new instance of MJPEGGenerator

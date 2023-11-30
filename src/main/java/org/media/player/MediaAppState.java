@@ -53,7 +53,7 @@ public class MediaAppState extends BaseAppState {
         guiNode.attachChild(screen);
         mediaPlayer.loadAndPlayMedia();
 
-        mediaPlayer.setListener(new VideoScreenAdapter() {
+        mediaPlayer.setVideoScreenListener(new VideoScreenAdapter() {
             @Override
             public void onEnd(String screenName) {
                 isStopped = true;

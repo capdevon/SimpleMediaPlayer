@@ -1,19 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.media.player.test;
 
-import com.jme3.app.SimpleApplication;
-import com.jme3.font.BitmapFont;
-import com.jme3.font.BitmapText;
-import com.jme3.input.event.MouseButtonEvent;
-import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector3f;
-import com.jme3.renderer.RenderManager;
-import com.jme3.scene.Geometry;
-import com.jme3.system.AppSettings;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +7,15 @@ import java.util.HashMap;
 import org.media.player.MediaConfig;
 import org.media.player.MediaPlayerFactory;
 import org.media.player.SimpleMediaPlayer;
+
+import com.jme3.app.SimpleApplication;
+import com.jme3.font.BitmapFont;
+import com.jme3.font.BitmapText;
+import com.jme3.input.event.MouseButtonEvent;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
+import com.jme3.system.AppSettings;
 
 /**
  * Test to show how to use MediaPlayer.
@@ -213,13 +208,8 @@ public class MenuGeometryTest extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
-        //!!!!!!!!!!IMPORTANT
+        //IMPORTANT !!!
         mplayersList.forEach(mp -> mp.update(tpf));
-    }
-
-    @Override
-    public void simpleRender(RenderManager rm) {
-        //TODO: add render code
     }
 
 }

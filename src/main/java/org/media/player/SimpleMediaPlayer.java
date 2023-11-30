@@ -36,29 +36,28 @@ public class SimpleMediaPlayer {
     //
     private final Application app;
 
-    //Main texture used for playing video
+    // Main texture used for playing video
     private Texture2D texture;
-    //Temp empty image
+    // Temp empty image
     private Image emptyImage = new Image(Image.Format.ABGR8, 1, 1, BufferUtils.createByteBuffer(4), ColorSpace.sRGB);
-    //Converter
+    // Converter
     private final AWTLoader m_AWTLoader = new AWTLoader();
-    //Main list for all the frames - raw data
+    // Main list for all the frames - raw data
     private final ArrayList<byte[]> frames = new ArrayList<>();
 
-    //Loading variables
+    // Loading variables
     private ExecutorService executor;
     private LoadingTask loadingTask;
     private Future<?> loadingResult;
     private boolean loading;
     private boolean loaded;
     private boolean playOnLoad;
-    //Indicates if video is online
+    // Indicates if video is online
     private boolean playing;
     private boolean paused;
-    //Indicates if player is listening to audio being ready
+    // Indicates if player is listening to audio being ready
     private boolean syncing;
     //
-    private long timeSinceStart = 0;
     private int prevFrameIndex = -1;
     private long startTime = 0;
     private long pauseTime = 0;
@@ -66,11 +65,11 @@ public class SimpleMediaPlayer {
     private boolean running;
 
     private VideoCodec m_videoCodec = new VideoMjpegCodec();
-    //Internal listener 
+    // Internal listener
     private VideoScreenListener videoScreenListener = null;
 
-    //Main audio player
-    private AudioNode jmeAudioBG;
+    // Main audio player
+    private AudioNode jmeAudioNode;
     private final Geometry screenGeom;
     private final Material screenMat;
     private final MediaEffectManager effectManager;
@@ -95,7 +94,7 @@ public class SimpleMediaPlayer {
      * 
      * @param app
      * @param screen
-     * @param config 
+     * @param config
      */
     protected SimpleMediaPlayer(Application app, Geometry screen, MediaConfig config) {
         this.app = app;
@@ -161,14 +160,14 @@ public class SimpleMediaPlayer {
      */
     @Deprecated
     public void setAudioVolume(float newVolume) {
-        if (jmeAudioBG != null) {
-            jmeAudioBG.setVolume(newVolume);
+        if (jmeAudioNode != null) {
+            jmeAudioNode.setVolume(newVolume);
         }
     }
 
     /**
-     * Sets new data (video and audio) for the player.
-     * Requires reloading to take effect.
+     * Sets new data (video and audio) for the player. Requires reloading to take
+     * effect.
      */
     @Deprecated
     public void setMedia(String videoAssetPath, String audioAssetPath) {
@@ -177,72 +176,72 @@ public class SimpleMediaPlayer {
     }
 
     private void prepareLoading() {
-        //inform listener
+        // inform listener
         notifyOnPreLoad();
 
-        //Loading image
+        // Loading image
         if (loadingImageAssetPath != null) {
             screenMat.setTexture("ColorMap", app.getAssetManager().loadTexture(loadingImageAssetPath));
         } else {
             screenMat.setColor("Color", screenColor);
         }
 
-        //init audio - if any 
+        // init audio - if any
         if (audioAssetPath != null) {
-            jmeAudioBG = new AudioNode(app.getAssetManager(), audioAssetPath, AudioData.DataType.Buffer);
-            jmeAudioBG.setPositional(false);
-            jmeAudioBG.setLooping(false);
-            jmeAudioBG.setVolume(1);
+            jmeAudioNode = new AudioNode(app.getAssetManager(), audioAssetPath, AudioData.DataType.Buffer);
+            jmeAudioNode.setPositional(false);
+            jmeAudioNode.setLooping(false);
+            jmeAudioNode.setVolume(1);
         }
 
-        //For async loading - each time
+        // For async loading - each time
         executor = Executors.newSingleThreadExecutor();
-        //Init loading. Check in update
+        // Init loading. Check in update
         loadingTask = new LoadingTask();
         loadingResult = executor.submit(loadingTask);
-        //start testing for loaded in update
+        // start testing for loaded in update
         loading = true;
     }
 
     private void startMedia() {
-        //If audio is present starts syncing - listening for audio to start
-        if (jmeAudioBG != null) {
-            //enable syncing 
+        // If audio is present starts syncing - listening for audio to start
+        if (jmeAudioNode != null) {
+            // enable syncing
             syncing = true;
-            //play audio
-            jmeAudioBG.play();
+            // play audio
+            jmeAudioNode.play();
         } else {
             startVideo();
         }
     }
 
     private void syncAudioAndVideo() {
-        if (jmeAudioBG.getStatus() == AudioSource.Status.Playing) {
-            //disable testing
+        if (jmeAudioNode.getStatus() == AudioSource.Status.Playing) {
+            // disable testing
             syncing = false;
-            //play video
+            // play video
             startVideo();
         }
     }
 
     private void startVideo() {
-        //inform listener
+        // inform listener
         notifyOnPrePlay();
 
-        //remove static image
+        // remove static image
         screenMat.clearParam("Color");
-        //set image that will receive data from runner via emptyImage
+        // set image that will receive data from runner via emptyImage
         screenMat.setTexture("ColorMap", getTexture());
-        // 
+        //
         startRunner();
         //
         playing = true;
     }
 
-    //Main method to convert jpg to texture.    
+    // Main method to convert jpg to texture.
     private void setImage(byte[] jpegBytes) {
 
-        //System.out.println("setImage=" + jpegBytes.length);
+        // System.out.println("setImage=" + jpegBytes.length);
         if (jpegBytes == null) {
             return;
         }
@@ -254,7 +253,7 @@ public class SimpleMediaPlayer {
             return;
         }
 
-        //Back to tex
+        // Back to tex
         texture.setImage(m_AWTLoader.load(image, true));
     }
 
@@ -265,26 +264,26 @@ public class SimpleMediaPlayer {
         return texture;
     }
 
-    //stop playback and release or replay  
+    // stop playback and release or replay
     private void stopPlayBack() {
-        //prevents double stop
+        // prevents double stop
         if (!playing) {
             return;
         }
 
-        //Disable audio and video. Release data
-        if (jmeAudioBG != null) {
-            jmeAudioBG.stop();
+        // Disable audio and video. Release data
+        if (jmeAudioNode != null) {
+            jmeAudioNode.stop();
         }
         //
         stopRunner();
 
-        //Release  
+        // Release
         emptyImage = null;
         playing = false;
         playOnLoad = false;
         syncing = false;
-        //clean threads - otherwise it may still be alive
+        // clean threads - otherwise it may still be alive
         if (loadingResult != null) {
             loadingResult.cancel(true);
         }
@@ -292,9 +291,9 @@ public class SimpleMediaPlayer {
             executor.shutdownNow();
         }
 
-        //If played once - reset idle image. With loop play again
+        // If played once - reset idle image. With loop play again
         if (playBackMode == PlaybackMode.ONCE) {
-            //Idle again
+            // Idle again
             if (idleImageAssetPath != null) {
                 screenMat.setTexture("ColorMap", app.getAssetManager().loadTexture(idleImageAssetPath));
             } else {
@@ -313,7 +312,7 @@ public class SimpleMediaPlayer {
      * Stops media in any state. Also releases any memory resources.
      */
     public void stopMedia() {
-        //prevents stop if already stopped - unless during loading
+        // prevents stop if already stopped - unless during loading
         if (!playing) {
             if (loading) {
                 cleanLoading();
@@ -321,23 +320,23 @@ public class SimpleMediaPlayer {
             return;
         }
 
-        //Disable audio and video. Release data
-        if (jmeAudioBG != null) {
-            jmeAudioBG.stop();
+        // Disable audio and video. Release data
+        if (jmeAudioNode != null) {
+            jmeAudioNode.stop();
         }
 
-        //always release
+        // always release
         stopRunner();
         frames.clear();
         loaded = false;
 
-        //Release  
+        // Release
         emptyImage = null;
         playing = false;
         playOnLoad = false;
         syncing = false;
 
-        //clean threads - otherwise it may still be alive
+        // clean threads - otherwise it may still be alive
         if (loadingResult != null) {
             loadingResult.cancel(true);
         }
@@ -345,7 +344,7 @@ public class SimpleMediaPlayer {
             executor.shutdownNow();
         }
 
-        //Idle again
+        // Idle again
         if (idleImageAssetPath != null) {
             screenMat.setTexture("ColorMap", app.getAssetManager().loadTexture(idleImageAssetPath));
         } else {
@@ -356,19 +355,19 @@ public class SimpleMediaPlayer {
     }
 
     /**
-     * Initiate loading task and play afterwards. Preferred way to start
-     * playback. May be splitted into loadMedia() and playMedia()
+     * Initiate loading task and play afterwards. Preferred way to start playback.
+     * May be splitted into loadMedia() and playMedia()
      */
     public void loadAndPlayMedia() {
-        //prevents double play, play during loading
+        // prevents double play, play during loading
         if (playing || loading) {
             return;
         }
 
-        //if play once - always load. If loop - the first time
-        //System.out.println("PLAYED ONCE " + frames.size());
+        // if play once - always load. If loop - the first time
+        // System.out.println("PLAYED ONCE " + frames.size());
         prepareLoading();
-        //Also play once loaded 
+        // Also play once loaded
         playOnLoad = true;
     }
 
@@ -376,14 +375,14 @@ public class SimpleMediaPlayer {
      * Initiate loading task without playing. Use playMedia() afterwards.
      */
     public void loadMedia() {
-        //prevents double play, play during loading
+        // prevents double play, play during loading
         if (playing || loading) {
             return;
         }
 
-        //if play once - always load. If loop - the first time
+        // if play once - always load. If loop - the first time
         prepareLoading();
-        //Also play once loaded 
+        // Also play once loaded
         playOnLoad = false;
     }
 
@@ -391,7 +390,7 @@ public class SimpleMediaPlayer {
      * Play already loaded media. Do not use for unpausing - no effect.
      */
     public void playMedia() {
-        //prevents double play, play during loading
+        // prevents double play, play during loading
         if (playing || loading || !loaded) {
             return;
         }
@@ -427,21 +426,21 @@ public class SimpleMediaPlayer {
     }
 
     /**
-     * Pauses the media. Displays predefined image or last frame. 
+     * Pauses the media. Displays predefined image or last frame.
      */
     public void pauseMedia() {
-        //cannot pause not playing 
+        // cannot pause not playing
         if (!playing || paused) {
             return;
         }
 
-        //Paused screen or last frame
+        // Paused screen or last frame
         if (pausedImageAssetPath != null) {
             screenMat.setTexture("ColorMap", app.getAssetManager().loadTexture(pausedImageAssetPath));
         }
 
-        if (jmeAudioBG != null) {
-            jmeAudioBG.pause();
+        if (jmeAudioNode != null) {
+            jmeAudioNode.pause();
         }
 
         paused = true;
@@ -457,24 +456,24 @@ public class SimpleMediaPlayer {
         }
         paused = false;
         pausePeriod = pausePeriod + System.currentTimeMillis() - pauseTime;
-        //re-establish texture
+        // re-establish texture
         screenMat.setTexture("ColorMap", getTexture());
 
-        if (jmeAudioBG != null) {
-            jmeAudioBG.play();
+        if (jmeAudioNode != null) {
+            jmeAudioNode.play();
         }
     }
 
     /**
-     * Main update method used to display images. 
-     * Must be called manually from parent object.
+     * Main update method used to display images. Must be called manually from
+     * parent object.
      *
      * @param tpf
      */
     public void update(float tpf) {
-        //-----------------------LOADING-----------------------
+        // -----------------------LOADING-----------------------
         if (loading) {
-            //check if the loading is complete
+            // check if the loading is complete
             if (loadingResult.isDone()) {
                 if (!loaded) {
 
@@ -483,49 +482,49 @@ public class SimpleMediaPlayer {
 
                     notifyOnLoaded();
 
-                    //Play if not waiting for play - starts audio and waits for syncing  
+                    // Play if not waiting for play - starts audio and waits for syncing
                     if (playOnLoad) {
                         startMedia();
                     }
                 }
             }
         }
-        //-----------------------PLAYBACK-----------------------
-        //Wait for the audio to start
+        // -----------------------PLAYBACK-----------------------
+        // Wait for the audio to start
         if (syncing) {
             syncAudioAndVideo();
             return;
         }
-        //Do not play if not ON   
+        // Do not play if not ON
         if (!playing) {
             return;
         }
 
-        //PLAY - true if any frame was retrieved and played
+        // PLAY - true if any frame was retrieved and played
         boolean isPlayed = calcFrame();
 
-        //if end - it is already stop by setEnd. Here just small last cleanup
+        // if end - it is already stop by setEnd. Here just small last cleanup
         if (!isPlayed) {
             // do nothing
         }
     }
 
     private void cleanLoading() {
-        //kill task 
+        // kill task
         loadingResult.cancel(true);
         executor.shutdownNow();
-        //not loading
+        // not loading
         loading = false;
     }
 
-    //-----------------------LOADER-----------------------
+    // -----------------------LOADER-----------------------
     private class LoadingTask implements Runnable {
 
         @Override
         public void run() {
-            //Video file stream  
+            // Video file stream
             InputStream videoStream = openAsset(videoAssetPath);
-            //read all frames at once
+            // read all frames at once
             m_videoCodec.read(videoStream, frames);
         }
 
@@ -536,10 +535,10 @@ public class SimpleMediaPlayer {
 
     }
 
-    //-----------------------RUNNER-----------------------
+    // -----------------------RUNNER-----------------------
     private void startRunner() {
         startTime = System.currentTimeMillis();
-        //System.out.println("START " + frames.size());
+        // System.out.println("START " + frames.size());
         running = true;
     }
 
@@ -556,14 +555,14 @@ public class SimpleMediaPlayer {
     private boolean calcFrame() {
 
         if (running && !paused) {
-            timeSinceStart = ((System.currentTimeMillis() - startTime) - pausePeriod);
-            int currFrameIndex = (int)((timeSinceStart / fps) / 1000);
+            long timeSinceStart = ((System.currentTimeMillis() - startTime) - pausePeriod);
+            int currFrameIndex = (int) ((timeSinceStart / fps) / 1000);
 
             if (currFrameIndex == prevFrameIndex) {
                 return true;
             }
 
-            //new frame
+            // new frame
             prevFrameIndex = currFrameIndex;
             if (currFrameIndex >= frames.size()) {
                 stopPlayBack();
@@ -572,11 +571,11 @@ public class SimpleMediaPlayer {
             }
         }
 
-        //System.out.println("running=" + running);
+        // System.out.println("running=" + running);
         return running;
     }
 
-    //-----------------------VideoScreenListener-----------------------
+    // -----------------------VideoScreenListener-----------------------
 
     private void notifyOnEnd() {
         if (videoScreenListener != null) {
@@ -613,19 +612,12 @@ public class SimpleMediaPlayer {
         }
     }
 
-    public void setListener(VideoScreenListener listener) {
+    public void setVideoScreenListener(VideoScreenListener listener) {
         this.videoScreenListener = listener;
     }
 
-    public VideoScreenListener getListener() {
+    public VideoScreenListener getVideoScreenListener() {
         return this.videoScreenListener;
-    }
-
-    /**
-     * Listener for media events. You can use only one listener.
-     */
-    public void removeListener() {
-        this.videoScreenListener = null;
     }
 
 }

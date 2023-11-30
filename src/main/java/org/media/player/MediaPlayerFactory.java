@@ -15,7 +15,7 @@ import com.jme3.scene.shape.Quad;
 public class MediaPlayerFactory {
 
     private final Application app;
-    
+
     /**
      * Main constructor
      *
@@ -32,11 +32,11 @@ public class MediaPlayerFactory {
      */
     public SimpleMediaPlayer createMediaPlayer(MediaConfig config) {
 
-        //Calculates dimensions of the geometry
+        // Calculates dimensions of the geometry
         int width = app.getCamera().getWidth();
         int height = app.getCamera().getHeight();
         float zoomingFactor = config.zoomingFactor;
-        
+
         /**
          * If keepAspect is true the screen is not stretched. Instead it is centered
          * according to the width. ScreenColor is used to fill the screen.
@@ -46,41 +46,41 @@ public class MediaPlayerFactory {
             height = config.movieHeight;
             app.getViewPort().setBackgroundColor(config.screenColor);
         }
-        
+
         float quadWidth = width * zoomingFactor;
         float quadHeight = height * zoomingFactor;
-        
+
         Geometry screen = new Geometry(config.screenName, new Quad(quadWidth, quadHeight));
         Material mat = createScreenMaterial(config);
         screen.setMaterial(mat);
-        
+
         // Setup screen location
         int offsetX = (int) ((quadWidth - width) / 2f);
         int offsetY = (int) ((quadHeight - height) / 2f);
         screen.setLocalTranslation(new Vector3f(-offsetX, -offsetY, 1));
-        
+
         SimpleMediaPlayer mediaPlayer = new SimpleMediaPlayer(app, screen, config);
-        //mediaPlayer.loadMedia();
-        
+        // mediaPlayer.loadMedia();
+
         return mediaPlayer;
     }
 
-    private Material createScreenMaterial(MediaConfig config) { 
+    private Material createScreenMaterial(MediaConfig config) {
 
-        //material and texture
+        // material and texture
         Material mat = new Material(app.getAssetManager(), "MatDefs/SimpleMediaPlayer/SimpleMediaPlayer.j3md");
 
-        //Set transparency
+        // Set transparency
         mat.setFloat("Alpha", FastMath.clamp(config.alpha, 0, 1));
         mat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
 
-        //Initial idle
+        // Initial idle
         if (config.idleImagePath != null) {
             mat.setTexture("ColorMap", app.getAssetManager().loadTexture(config.idleImagePath));
         } else {
             mat.setColor("Color", config.screenColor);
         }
-        
+
         return mat;
     }
 
