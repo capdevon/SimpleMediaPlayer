@@ -23,7 +23,7 @@ mediaPlayer.getEffectManager().enableBlackAndWhiteEffect(true); //ok
 
 ## Requirements
 - [jmonkeyengine](https://github.com/jMonkeyEngine/jmonkeyengine) - A complete 3D game development suite written purely in Java.
-- jdk8+
+- jdk11+
 
 ## Credits
 All files under the 'resources' folder belong to polincdev.
