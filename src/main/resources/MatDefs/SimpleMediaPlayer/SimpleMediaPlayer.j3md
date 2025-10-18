@@ -20,8 +20,8 @@ MaterialDef MediaPlayer {
     }
 
     Technique {
-        VertexShader GLSL100:   MatDefs/SimpleMediaPlayer/SimpleMediaPlayer.vert
-        FragmentShader GLSL100: MatDefs/SimpleMediaPlayer/SimpleMediaPlayer.frag
+        VertexShader GLSL300 GLSL150 GLSL100:   MatDefs/SimpleMediaPlayer/SimpleMediaPlayer.vert
+        FragmentShader GLSL300 GLSL150 GLSL100: MatDefs/SimpleMediaPlayer/SimpleMediaPlayer.frag
 
         WorldParameters {
             WorldViewProjectionMatrix
@@ -50,8 +50,8 @@ MaterialDef MediaPlayer {
 
     Technique Glow {
 
-        VertexShader GLSL100:   Common/MatDefs/Misc/Unshaded.vert
-        FragmentShader GLSL100: Common/MatDefs/Light/Glow.frag
+        VertexShader GLSL300 GLSL150 GLSL100:   Common/MatDefs/Misc/Unshaded.vert
+        FragmentShader GLSL300 GLSL150 GLSL100: Common/MatDefs/Light/Glow.frag
 
         WorldParameters {
             WorldViewProjectionMatrix
