@@ -3,12 +3,21 @@ plugins {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 project.ext {
-    jmeVersion = '3.7.0-stable'
+    jmeVersion = '3.8.1-stable'
+}
+
+gradle.projectsEvaluated {
+    tasks.withType(JavaCompile).configureEach { // compile-time options:
+        options.compilerArgs << '-Xdiags:verbose'
+        options.compilerArgs << '-Xlint:unchecked'
+        //options.deprecation = true
+        options.encoding = 'UTF-8'
+    }
 }
 
 repositories {
@@ -33,10 +42,6 @@ dependencies {
 
     runtimeOnly 'org.jmonkeyengine:jme3-jogg:' + jmeVersion
     runtimeOnly 'org.jmonkeyengine:jme3-plugins:' + jmeVersion
-}
-
-wrapper {
-    gradleVersion = '8.4'
 }
 
 // Register cleanup tasks:
