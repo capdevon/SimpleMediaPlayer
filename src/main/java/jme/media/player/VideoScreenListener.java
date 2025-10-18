@@ -11,28 +11,28 @@ public interface VideoScreenListener {
      *
      * @param screenName to call it.
      */
-    public void onPreLoad(String screenName);
+    void onPreLoad(String screenName);
 
     /**
      * Triggered when video is loaded before syncing with audio
      *
      * @param screenName to call it.
      */
-    public void onLoaded(String screenName);
+    void onLoaded(String screenName);
 
     /**
      * Triggered right before playing media
      *
      * @param screenName to call it.
      */
-    public void onPrePlay(String screenName);
+    void onPrePlay(String screenName);
 
     /**
      * Triggered after playback loop is finished. Called only in LOOP mode
      *
      * @param screenName to call it.
      */
-    public void onLoopEnd(String screenName);
+    void onLoopEnd(String screenName);
 
     /**
      * Triggered after playback is finished. Called in LOOP and ONCE mode at the
@@ -40,6 +40,6 @@ public interface VideoScreenListener {
      *
      * @param screenName to call it.
      */
-    public void onEnd(String screenName);
+    void onEnd(String screenName);
 
 }

@@ -93,7 +93,7 @@ public class MediaEffectManager {
     }
 
     /**
-     * Enables or disables LCD effect - weak pixelization
+     * Enables or disables LCD effect - weak pixelation
      *
      * @param enabled
      */
@@ -106,7 +106,7 @@ public class MediaEffectManager {
     }
 
     /**
-     * Enables or disables CRT effect - old monitor pixelization
+     * Enables or disables CRT effect - old monitor pixelation
      *
      * @param enabled
      */

@@ -37,8 +37,8 @@ public class MediaPlayerFactory {
         int height = app.getCamera().getHeight();
         float zoomingFactor = config.zoomingFactor;
 
-        /**
-         * If keepAspect is true the screen is not stretched. Instead it is centered
+        /*
+         * If keepAspect is true the screen is not stretched. Instead, it is centered
          * according to the width. ScreenColor is used to fill the screen.
          */
         if (config.keepAspect) {

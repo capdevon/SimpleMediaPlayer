@@ -9,19 +9,19 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author capdevon
  */
 public class MediaAppState extends BaseAppState {
-    
+
     private static final Logger LOGGER = Logger.getLogger(MediaAppState.class.getName());
-    
+
     private static final String KEY_SKIP = "SKIP_VIDEO";
-    
+
     private final MediaConfig config;
     private InputManager inputManager;
     private Node guiNode;
@@ -29,7 +29,7 @@ public class MediaAppState extends BaseAppState {
     private Geometry screen;
     private boolean isStopped;
     private boolean isDisposed;
-    
+
     public MediaAppState(MediaConfig config) {
         this.config = config;
     }
@@ -38,9 +38,9 @@ public class MediaAppState extends BaseAppState {
     protected void initialize(Application app) {
         this.guiNode = ((SimpleApplication) app).getGuiNode();
         this.inputManager = app.getInputManager();
-        
+
         isStopped = isDisposed = false;
-        
+
         MediaPlayerFactory factory = new MediaPlayerFactory(app);
         mediaPlayer = factory.createMediaPlayer(config);
         screen = mediaPlayer.getGeometry();
@@ -54,7 +54,7 @@ public class MediaAppState extends BaseAppState {
                 isStopped = true;
             }
         });
-        
+
         LOGGER.log(Level.INFO, "MediaAppState initialized");
     }
 
@@ -80,12 +80,12 @@ public class MediaAppState extends BaseAppState {
         inputManager.removeListener(actionListener);
         LOGGER.log(Level.INFO, "MediaAppState disable input listener");
     }
-  
+
     @Override
     public void update(float tpf) {
         mediaPlayer.update(tpf);
     }
-    
+
     private final ActionListener actionListener = new ActionListener() {
         @Override
         public void onAction(String name, boolean isPressed, float tpf) {
@@ -94,13 +94,13 @@ public class MediaAppState extends BaseAppState {
             }
         }
     };
-    
+
     public boolean isStopped() {
         return isStopped;
     }
-    
+
     public boolean isDisposed() {
         return isDisposed;
     }
-    
+
 }

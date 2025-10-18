@@ -9,6 +9,6 @@ import java.util.List;
  */
 public interface VideoCodec {
 
-    public void read(InputStream streamIn, List<byte[]> ret);
+    void read(InputStream streamIn, List<byte[]> ret);
 
 }

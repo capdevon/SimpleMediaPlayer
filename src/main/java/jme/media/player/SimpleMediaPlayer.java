@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -43,11 +44,10 @@ public class SimpleMediaPlayer {
     // Converter
     private final AWTLoader m_AWTLoader = new AWTLoader();
     // Main list for all the frames - raw data
-    private final ArrayList<byte[]> frames = new ArrayList<>();
+    private final List<byte[]> frames = new ArrayList<>();
 
     // Loading variables
     private ExecutorService executor;
-    private LoadingTask loadingTask;
     private Future<?> loadingResult;
     private boolean loading;
     private boolean loaded;
@@ -69,7 +69,7 @@ public class SimpleMediaPlayer {
     private VideoScreenListener videoScreenListener = null;
 
     // Main audio player
-    private AudioNode jmeAudioNode;
+    private AudioNode audioNode;
     private final Geometry screenGeom;
     private final Material screenMat;
     private final MediaEffectManager effectManager;
@@ -160,8 +160,8 @@ public class SimpleMediaPlayer {
      */
     @Deprecated
     public void setAudioVolume(float newVolume) {
-        if (jmeAudioNode != null) {
-            jmeAudioNode.setVolume(newVolume);
+        if (audioNode != null) {
+            audioNode.setVolume(newVolume);
         }
     }
 
@@ -188,35 +188,34 @@ public class SimpleMediaPlayer {
 
         // init audio - if any
         if (audioAssetPath != null) {
-            jmeAudioNode = new AudioNode(app.getAssetManager(), audioAssetPath, AudioData.DataType.Buffer);
-            jmeAudioNode.setPositional(false);
-            jmeAudioNode.setLooping(false);
-            jmeAudioNode.setVolume(1);
+            audioNode = new AudioNode(app.getAssetManager(), audioAssetPath, AudioData.DataType.Buffer);
+            audioNode.setPositional(false);
+            audioNode.setLooping(false);
+            audioNode.setVolume(1);
         }
 
         // For async loading - each time
         executor = Executors.newSingleThreadExecutor();
         // Init loading. Check in update
-        loadingTask = new LoadingTask();
-        loadingResult = executor.submit(loadingTask);
+        loadingResult = executor.submit(new LoadingTask());
         // start testing for loaded in update
         loading = true;
     }
 
     private void startMedia() {
         // If audio is present starts syncing - listening for audio to start
-        if (jmeAudioNode != null) {
+        if (audioNode != null) {
             // enable syncing
             syncing = true;
             // play audio
-            jmeAudioNode.play();
+            audioNode.play();
         } else {
             startVideo();
         }
     }
 
     private void syncAudioAndVideo() {
-        if (jmeAudioNode.getStatus() == AudioSource.Status.Playing) {
+        if (audioNode.getStatus() == AudioSource.Status.Playing) {
             // disable testing
             syncing = false;
             // play video
@@ -245,16 +244,13 @@ public class SimpleMediaPlayer {
         if (jpegBytes == null) {
             return;
         }
-        BufferedImage image = null;
         try {
-            image = ImageIO.read(new ByteArrayInputStream(jpegBytes));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return;
-        }
+            BufferedImage image = ImageIO.read(new ByteArrayInputStream(jpegBytes));
+            texture.setImage(m_AWTLoader.load(image, true));
 
-        // Back to tex
-        texture.setImage(m_AWTLoader.load(image, true));
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, ex.getMessage(), ex);
+        }
     }
 
     private Texture2D getTexture() {
@@ -272,8 +268,8 @@ public class SimpleMediaPlayer {
         }
 
         // Disable audio and video. Release data
-        if (jmeAudioNode != null) {
-            jmeAudioNode.stop();
+        if (audioNode != null) {
+            audioNode.stop();
         }
         //
         stopRunner();
@@ -321,8 +317,8 @@ public class SimpleMediaPlayer {
         }
 
         // Disable audio and video. Release data
-        if (jmeAudioNode != null) {
-            jmeAudioNode.stop();
+        if (audioNode != null) {
+            audioNode.stop();
         }
 
         // always release
@@ -439,8 +435,8 @@ public class SimpleMediaPlayer {
             screenMat.setTexture("ColorMap", app.getAssetManager().loadTexture(pausedImageAssetPath));
         }
 
-        if (jmeAudioNode != null) {
-            jmeAudioNode.pause();
+        if (audioNode != null) {
+            audioNode.pause();
         }
 
         paused = true;
@@ -459,8 +455,8 @@ public class SimpleMediaPlayer {
         // re-establish texture
         screenMat.setTexture("ColorMap", getTexture());
 
-        if (jmeAudioNode != null) {
-            jmeAudioNode.play();
+        if (audioNode != null) {
+            audioNode.play();
         }
     }
 
@@ -523,14 +519,14 @@ public class SimpleMediaPlayer {
         @Override
         public void run() {
             // Video file stream
-            InputStream videoStream = openAsset(videoAssetPath);
-            // read all frames at once
-            m_videoCodec.read(videoStream, frames);
-        }
-
-        private InputStream openAsset(String name) {
-            AssetInfo aInfo = app.getAssetManager().locateAsset(new AssetKey(name));
-            return aInfo.openStream();
+            AssetInfo aInfo = app.getAssetManager().locateAsset(new AssetKey(videoAssetPath));
+            InputStream videoStream = aInfo.openStream();
+//            try (InputStream videoStream = aInfo.openStream()) {
+                // read all frames at once
+                m_videoCodec.read(videoStream, frames);
+//            } catch (IOException e) {
+//                logger.log(Level.SEVERE, e.getMessage(), e);
+//            }
         }
 
     }
