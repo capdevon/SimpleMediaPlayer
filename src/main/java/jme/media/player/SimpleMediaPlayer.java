@@ -520,13 +520,12 @@ public class SimpleMediaPlayer {
         public void run() {
             // Video file stream
             AssetInfo aInfo = app.getAssetManager().locateAsset(new AssetKey(videoAssetPath));
-            InputStream videoStream = aInfo.openStream();
-//            try (InputStream videoStream = aInfo.openStream()) {
+            try (InputStream videoStream = aInfo.openStream()) {
                 // read all frames at once
                 m_videoCodec.read(videoStream, frames);
-//            } catch (IOException e) {
-//                logger.log(Level.SEVERE, e.getMessage(), e);
-//            }
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, e.getMessage(), e);
+            }
         }
 
     }
