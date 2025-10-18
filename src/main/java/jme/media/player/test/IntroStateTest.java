@@ -32,8 +32,13 @@ public class IntroStateTest extends SimpleApplication {
     public static void main(String[] args) {
         IntroStateTest app = new IntroStateTest();
         AppSettings settings = new AppSettings(true);
+        settings.setRenderer(AppSettings.LWJGL_OPENGL32);
         settings.setResolution(1024, 768);
+        settings.setFrameRate(60);
+
         app.setSettings(settings);
+        app.setPauseOnLostFocus(false);
+        app.setShowSettings(false);
         app.start();
     }
 
@@ -74,7 +79,7 @@ public class IntroStateTest extends SimpleApplication {
         
         //Generate state
         introState = new MediaAppState(config);
-        //Add intro state. Auto load and play video on enabled
+        //Add intro state. Autoload and play video on enabled
         stateManager.attach(introState);
 
         //Menu state - switched after intro. Initially detached. Attached on movie end

@@ -30,7 +30,6 @@ import jme.media.player.VideoScreenAdapter;
 public class ScreenMaterialTest extends SimpleApplication implements ActionListener {
 
     private SimpleMediaPlayer mediaPlayer;
-    private BitmapText hintText;
     private PointLight pointLight;
     private Node scene;
 
@@ -41,8 +40,13 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
     public static void main(String[] args) {
         ScreenMaterialTest app = new ScreenMaterialTest();
         AppSettings settings = new AppSettings(true);
+        settings.setRenderer(AppSettings.LWJGL_OPENGL32);
         settings.setResolution(1024, 768);
+        settings.setFrameRate(60);
+
         app.setSettings(settings);
+        app.setPauseOnLostFocus(false);
+        app.setShowSettings(false);
         app.start();
     }
 
@@ -84,10 +88,11 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
 //        mediaPlayer.getEffectManager().enableLineEffect(true); //doesn't work
 //        mediaPlayer.getEffectManager().enableGrainEffect(true); //doesn't work
 //        mediaPlayer.getEffectManager().enableVignetteEffect(true); //doesn't work
-        mediaPlayer.getEffectManager().enableLCDEffect(true);
+//        mediaPlayer.getEffectManager().enableLCDEffect(true);
+        mediaPlayer.getEffectManager().enableVHSEffect(true);
 //        mediaPlayer.getEffectManager().enableCRTEffect(true); //doesn't work
 //        mediaPlayer.getEffectManager().enableGlitchEffect(true);
-        //Get submesh from a model. It was separated from different color during the import
+        //Get sub mesh from a model. It was separated from different color during the import
         ((Node) scene.getChild("TV")).getChild("mat2").setMaterial(modelMat);
         
         configureInputs();
@@ -139,7 +144,6 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
 
         DirectionalLightShadowFilter dlsf = new DirectionalLightShadowFilter(assetManager, 1024, 3);
         dlsf.setLight(sunLight);
-        dlsf.setEnabled(true);
 
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         fpp.addFilter(dlsf);
@@ -148,12 +152,12 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
     
     private void addHint() {
         BitmapFont font = assetManager.loadFont("Interface/Fonts/Default.fnt");
-        hintText = new BitmapText(font);
-        hintText.setSize(font.getCharSet().getRenderedSize() * 1.4f);
-        hintText.setColor(ColorRGBA.Red);
-        hintText.setText("Play/Pause:SPACE Reload:ENTER");
-        hintText.setLocalTranslation(0, this.getCamera().getHeight() - 10, 1.0f);
-        guiNode.attachChild(hintText);
+        BitmapText hud = new BitmapText(font);
+        hud.setSize(font.getCharSet().getRenderedSize() * 1.4f);
+        hud.setColor(ColorRGBA.Red);
+        hud.setText("Play/Pause:SPACE Reload:ENTER");
+        hud.setLocalTranslation(0, settings.getHeight() - 10, 1f);
+        guiNode.attachChild(hud);
     }
     
     private void configureInputs() {

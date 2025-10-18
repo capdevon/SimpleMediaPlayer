@@ -3,10 +3,13 @@ package jme.media.player.test;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
+import com.jme3.input.RawInputListenerAdapter;
 import com.jme3.input.event.MouseButtonEvent;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -29,15 +32,20 @@ public class MenuGeometryTest extends SimpleApplication {
     public static void main(String[] args) {
         MenuGeometryTest app = new MenuGeometryTest();
         AppSettings settings = new AppSettings(true);
+        settings.setRenderer(AppSettings.LWJGL_OPENGL32);
         settings.setResolution(1024, 768);
+        settings.setFrameRate(60);
+
         app.setSettings(settings);
+        app.setPauseOnLostFocus(false);
+        app.setShowSettings(false);
         app.start();
     }
     
     //Map for picking
-    private final HashMap<Rectangle, SimpleMediaPlayer> pickPlayer = new HashMap<>();
+    private final Map<Rectangle, SimpleMediaPlayer> pickPlayer = new HashMap<>();
     //Map for selecting
-    private final ArrayList<SimpleMediaPlayer> mplayersList = new ArrayList<>();
+    private final List<SimpleMediaPlayer> mplayersList = new ArrayList<>();
 
     @Override
     public void simpleInitApp() {
@@ -73,11 +81,11 @@ public class MenuGeometryTest extends SimpleApplication {
         //Effect
         SimpleMediaPlayer mplayer1 = factory.createMediaPlayer(config);
         Geometry menuGeo1 = mplayer1.getGeometry();
-        mplayer1.getEffectManager().enableVHSEffect(true);
+//        mplayer1.getEffectManager().enableVHSEffect(true);
         //Add to gui 
         guiNode.attachChild(menuGeo1);
         //Position      
-        menuGeo1.setLocalTranslation(cam.getWidth() / 4 - width / 2, cam.getHeight() * 0.75f - height / 2, 1.0f);
+        menuGeo1.setLocalTranslation(cam.getWidth() / 4f - width / 2f, cam.getHeight() * 0.75f - height / 2f, 1.0f);
         //Add to map for picking
         pickPlayer.put(createRectangle(menuGeo1, mplayer1), mplayer1);
         mplayersList.add(mplayer1);
@@ -96,7 +104,7 @@ public class MenuGeometryTest extends SimpleApplication {
         //Add to gui 
         guiNode.attachChild(menuGeo2);
         //Position      
-        menuGeo2.setLocalTranslation(cam.getWidth() * 0.75f - width / 2, (int) menuGeo1.getLocalTranslation().y, 1.0f);
+        menuGeo2.setLocalTranslation(cam.getWidth() * 0.75f - width / 2f, (int) menuGeo1.getLocalTranslation().y, 1.0f);
         //Add to map for picking
         pickPlayer.put(createRectangle(menuGeo2, mplayer2), mplayer2);
         mplayersList.add(mplayer2);
@@ -116,7 +124,7 @@ public class MenuGeometryTest extends SimpleApplication {
         //Add to gui
         guiNode.attachChild(menuGeo3);
         //Position      
-        menuGeo3.setLocalTranslation(menuGeo1.getLocalTranslation().x, cam.getHeight() / 4 - height / 2, 1.0f);
+        menuGeo3.setLocalTranslation(menuGeo1.getLocalTranslation().x, cam.getHeight() / 4f - height / 2f, 1.0f);
         //Add to map for picking
         pickPlayer.put(createRectangle(menuGeo3, mplayer3), mplayer3);
         mplayersList.add(mplayer3);
@@ -168,7 +176,7 @@ public class MenuGeometryTest extends SimpleApplication {
         guiNode.attachChild(bmp);
     }
     
-    private class MediaPlayerInputListener extends RawInputAdapter {
+    private class MediaPlayerInputListener extends RawInputListenerAdapter {
 
         @Override
         public void onMouseButtonEvent(MouseButtonEvent evt) {
