@@ -88,8 +88,8 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
 //        mediaPlayer.getEffectManager().enableLineEffect(true); //doesn't work
 //        mediaPlayer.getEffectManager().enableGrainEffect(true); //doesn't work
 //        mediaPlayer.getEffectManager().enableVignetteEffect(true); //doesn't work
-//        mediaPlayer.getEffectManager().enableLCDEffect(true);
-        mediaPlayer.getEffectManager().enableVHSEffect(true);
+        mediaPlayer.getEffectManager().enableLCDEffect(true);
+//        mediaPlayer.getEffectManager().enableVHSEffect(true); //doesn't work
 //        mediaPlayer.getEffectManager().enableCRTEffect(true); //doesn't work
 //        mediaPlayer.getEffectManager().enableGlitchEffect(true);
         //Get sub mesh from a model. It was separated from different color during the import
