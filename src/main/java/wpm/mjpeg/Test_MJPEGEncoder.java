@@ -48,14 +48,14 @@ public class Test_MJPEGEncoder {
      * Encodes separate jpgs files into mjpg file. See console for debugging.
      *
      * @param outputFile   - Target file - full path with file e.g. C://Media//myFile.mjpg.
-     * @param outputWidth  - Output movie dimension. In general it doesn't need to
+     * @param outputWidth  - Output movie dimension. In general, it doesn't need to
      *                     match input images dimension, but it is better to resize
      *                     outside of java and input files which are already resized.
      * @param outputHeight @see outputWidth 0
      * @param fps          - Target fps. In general should match the input fps. Not
      *                     really required though. This info is encoded into mjpeg
      *                     but the playback is dependent on the value provided later on.
-     * @param startNumber  - order number of first and last frame. All inclusive. 0
+     * @param startNumber  - order number of first and last frame. All-inclusive. 0
      *                     and 273 mean there is file prefix000.extName to
      *                     prefix273.extName Important. Convention assumes that the
      *                     padding is consistent with the number of digits of

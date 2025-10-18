@@ -6,13 +6,11 @@ import java.io.FilenameFilter;
 import javax.swing.ImageIcon;
 
 /**
- * 
  * @author monceaux
  */
 public class Test_MJPEGGenerator {
 
     /**
-     * 
      * @param args
      * @throws Exception
      */
@@ -30,7 +28,7 @@ public class Test_MJPEGGenerator {
             }
         });
 
-        int numFrames = (int)(files.length * framerate * (slideDuration + transitionDuration) + (transitionDuration * framerate));
+        int numFrames = (int) (files.length * framerate * (slideDuration + transitionDuration) + (transitionDuration * framerate));
         int width = 640;
         int height = 480;
 
