@@ -8,7 +8,7 @@ java {
 }
 
 project.ext {
-    jmeVersion = '3.8.1-stable'
+    jmeVersion = '3.9.0-stable'
 }
 
 gradle.projectsEvaluated {
