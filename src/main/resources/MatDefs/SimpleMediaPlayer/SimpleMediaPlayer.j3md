@@ -1,22 +1,19 @@
 MaterialDef MediaPlayer {
 
     MaterialParameters {
-        Texture2D ColorMap
-        Color Color (Color)
-         //General alpha
-        Float Alpha
-        // Alpha threshold for fragment discarding
-        Float AlphaDiscardThreshold (AlphaTestFallOff)
-
-        Boolean EnabledVHS;
-        Boolean EnabledLine;
-        Boolean EnabledGrain;
-        Boolean EnabledScanline;
-        Boolean EnabledVignette;
-        Boolean EnabledLCD;
-        Boolean EnabledCRT;
-        Boolean EnabledGlitch;
-        Boolean EnabledBAW;
+        Texture2D ColorMap             // Main texture map
+        Color Color (Color)            // Base tint color
+        Float Alpha                    // Global opacity (0.0 to 1.0)
+        Float AlphaDiscardThreshold (AlphaTestFallOff) // Threshold for alpha testing
+        Boolean EnabledVHS             // Toggle VHS tape dirt effect
+        Boolean EnabledLine            // Toggle moving noise strip
+        Boolean EnabledGrain           // Toggle dynamic film grain
+        Boolean EnabledScanline        // Toggle basic TV scanlines
+        Boolean EnabledVignette        // Toggle darkened screen borders
+        Boolean EnabledLCD             // Toggle LCD subpixel grid simulation
+        Boolean EnabledCRT             // Toggle branchless CRT phosphor mask
+        Boolean EnabledGlitch          // Toggle chromatic aberration UV shift
+        Boolean EnabledBAW             // Toggle black and white conversion
     }
 
     Technique {
@@ -27,15 +24,15 @@ MaterialDef MediaPlayer {
             WorldViewProjectionMatrix
             ViewProjectionMatrix
             ViewMatrix
-            Time;
-            Resolution;
+            Time
+            Resolution
         }
 
         Defines {
-            HAS_COLORMAP : ColorMap
-            HAS_COLOR : Color
-            HAS_ALPHA : Alpha
-            DISCARD_ALPHA : AlphaDiscardThreshold
+            HAS_COLORMAP: ColorMap
+            HAS_COLOR: Color
+            HAS_ALPHA: Alpha
+            DISCARD_ALPHA: AlphaDiscardThreshold
             HAS_EFFECT_VHS: EnabledVHS
             HAS_EFFECT_LINE: EnabledLine
             HAS_EFFECT_GRAIN: EnabledGrain
@@ -59,10 +56,6 @@ MaterialDef MediaPlayer {
 
         Defines {
             NEED_TEXCOORD1
-            //HAS_GLOWMAP : GlowMap
-            //HAS_GLOWCOLOR : GlowColor
-            //NUM_BONES : NumberOfBones
         }
     }
-  
 }
