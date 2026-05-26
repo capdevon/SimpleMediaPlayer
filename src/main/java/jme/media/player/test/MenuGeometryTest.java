@@ -50,7 +50,7 @@ public class MenuGeometryTest extends SimpleApplication {
     @Override
     public void simpleInitApp() {
 
-        viewPort.setBackgroundColor(ColorRGBA.White);
+        viewPort.setBackgroundColor(ColorRGBA.DarkGray);
         flyCam.setEnabled(false);
         
         //Config
