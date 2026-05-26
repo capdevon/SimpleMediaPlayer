@@ -7,14 +7,16 @@ import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
-
 import jme.media.player.MediaAppState;
 import jme.media.player.MediaConfig;
-import jme.media.player.SimpleMediaPlayer;
+import jme.media.player.PlaybackMode;
 
 /**
  * Test to show how to use MediaPlayer as intro or cutscene/outro.
@@ -32,8 +34,7 @@ public class IntroStateTest extends SimpleApplication {
     public static void main(String[] args) {
         IntroStateTest app = new IntroStateTest();
         AppSettings settings = new AppSettings(true);
-        settings.setRenderer(AppSettings.LWJGL_OPENGL32);
-        settings.setResolution(1024, 768);
+        settings.setResolution(800, 600);
         settings.setFrameRate(60);
 
         app.setSettings(settings);
@@ -45,17 +46,15 @@ public class IntroStateTest extends SimpleApplication {
     @Override
     public void simpleInitApp() {
 
-        setDisplayStatView(false);
-        //setDisplayFps(false);
-        flyCam.setDragToRotate(true);
+        flyCam.setEnabled(false);
 
         //Config
         MediaConfig config = new MediaConfig();
         //Original movie dimensions - relevant only for keeping aspect ratio
-        config.movieWidth = 960;
-        config.movieHeight = 540;
+        config.movieWidth = 640;
+        config.movieHeight = 480;
         //True if aspect ratio should be kept. False is the movie should be stretched to the screen 
-        //config.keepAspect = true;
+//        config.keepAspect = true;
         //Unique name
         config.screenName = "Intro";
         //Image to display when player is idle. Null to use screenColor
@@ -67,13 +66,13 @@ public class IntroStateTest extends SimpleApplication {
         //Color to use if above pictures are not provided.
         config.screenColor = ColorRGBA.Black;
         //Video to play. Must not be null
-        config.videoFilePath = "Media/960_540.mjpg";
+        config.videoFilePath = "Media/320_180.mjpg";
         //Audio to play. Null if no audio
         config.audioFilePath = "Media/audio.ogg";
         //Source FPS. Should be consistent with original FPS. In most cases 25 or 30
         config.framesPerSec = 30;
         //Playback mode. Play once or loop
-        config.playBackMode = SimpleMediaPlayer.PlaybackMode.ONCE;
+        config.playBackMode = PlaybackMode.ONCE;
         //Transparency of the screen. 1 for intro, material and menu geometries. Below 1 for HUD geometries
         config.alpha = 1f;
         
@@ -116,7 +115,7 @@ public class IntroStateTest extends SimpleApplication {
 
             BitmapFont font = app.getAssetManager().loadFont("Interface/Fonts/Default.fnt");
             hintText = new BitmapText(font);
-            hintText.setSize(font.getCharSet().getRenderedSize() * 3.0f);
+            hintText.setSize(font.getCharSet().getRenderedSize() * 2.0f);
             hintText.setColor(ColorRGBA.Red);
             hintText.setText("GAME MENU");
             hintText.setLocalTranslation(20, 400, 1.0f);
@@ -126,6 +125,17 @@ public class IntroStateTest extends SimpleApplication {
             Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
             mat.setColor("Color", ColorRGBA.Green);
             boxGeo.setMaterial(mat);
+
+            boxGeo.addControl(new AbstractControl() {
+                @Override
+                protected void controlUpdate(float tpf) {
+                    boxGeo.rotate(0, tpf, 0);
+                }
+
+                @Override
+                protected void controlRender(RenderManager rm, ViewPort vp) {
+                }
+            });
         }
 
         @Override

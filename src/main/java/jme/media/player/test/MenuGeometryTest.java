@@ -1,11 +1,5 @@
 package jme.media.player.test;
 
-import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
@@ -15,10 +9,16 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.system.AppSettings;
-
 import jme.media.player.MediaConfig;
 import jme.media.player.MediaPlayerFactory;
+import jme.media.player.PlaybackMode;
 import jme.media.player.SimpleMediaPlayer;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Test to show how to use MediaPlayer.
@@ -33,7 +33,7 @@ public class MenuGeometryTest extends SimpleApplication {
         MenuGeometryTest app = new MenuGeometryTest();
         AppSettings settings = new AppSettings(true);
         settings.setRenderer(AppSettings.LWJGL_OPENGL32);
-        settings.setResolution(1024, 768);
+        settings.setResolution(800, 600);
         settings.setFrameRate(60);
 
         app.setSettings(settings);
@@ -76,7 +76,7 @@ public class MenuGeometryTest extends SimpleApplication {
         config.videoFilePath = "Media/960_540.mjpg";
         config.audioFilePath = "Media/audio.ogg";
         config.framesPerSec = 30;
-        config.playBackMode = SimpleMediaPlayer.PlaybackMode.LOOP;
+        config.playBackMode = PlaybackMode.LOOP;
         config.alpha = 1f;
         //Effect
         SimpleMediaPlayer mplayer1 = factory.createMediaPlayer(config);
@@ -95,7 +95,7 @@ public class MenuGeometryTest extends SimpleApplication {
         config.screenColor = ColorRGBA.Red;
         config.videoFilePath = "Media/960_540.mjpg";
         config.idleImagePath = null;
-        config.playBackMode = SimpleMediaPlayer.PlaybackMode.ONCE;
+        config.playBackMode = PlaybackMode.ONCE;
         //Effect
         SimpleMediaPlayer mplayer2 = factory.createMediaPlayer(config);
         Geometry menuGeo2 = mplayer2.getGeometry();
@@ -115,7 +115,7 @@ public class MenuGeometryTest extends SimpleApplication {
         config.videoFilePath = "Media/800_480.mjpg";
         config.idleImagePath = "Textures/Media/idle-image.jpg";
         config.loadingImagePath = null;
-        config.playBackMode = SimpleMediaPlayer.PlaybackMode.ONCE;
+        config.playBackMode = PlaybackMode.ONCE;
         //Effect
         SimpleMediaPlayer mplayer3 = factory.createMediaPlayer(config);
         Geometry menuGeo3 = mplayer3.getGeometry();

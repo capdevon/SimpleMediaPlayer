@@ -2,14 +2,11 @@ package jme.media.player;
 
 import com.jme3.math.ColorRGBA;
 
-import jme.media.player.SimpleMediaPlayer.PlaybackMode;
-
 /**
- *
  * @author capdevon
  */
 public class MediaConfig {
-    
+
     //Playback mode. Play once or loop
     public PlaybackMode playBackMode = PlaybackMode.ONCE;
     //Original movie dimensions - relevant only for keeping aspect ratio
@@ -36,5 +33,5 @@ public class MediaConfig {
     public String audioFilePath;
     //Source FPS. Should be consistent with original FPS. In most cases 25 or 30
     public int framesPerSec = 30;
-    
+
 }

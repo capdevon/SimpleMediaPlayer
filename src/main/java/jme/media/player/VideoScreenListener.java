@@ -28,13 +28,6 @@ public interface VideoScreenListener {
     void onPrePlay(String screenName);
 
     /**
-     * Triggered after playback loop is finished. Called only in LOOP mode
-     *
-     * @param screenName to call it.
-     */
-    void onLoopEnd(String screenName);
-
-    /**
      * Triggered after playback is finished. Called in LOOP and ONCE mode at the
      * very end.
      *

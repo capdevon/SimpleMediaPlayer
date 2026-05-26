@@ -13,6 +13,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.filters.FXAAFilter;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -21,6 +22,7 @@ import com.jme3.system.AppSettings;
 
 import jme.media.player.MediaConfig;
 import jme.media.player.MediaPlayerFactory;
+import jme.media.player.PlaybackMode;
 import jme.media.player.SimpleMediaPlayer;
 import jme.media.player.VideoScreenAdapter;
 
@@ -41,7 +43,7 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
         ScreenMaterialTest app = new ScreenMaterialTest();
         AppSettings settings = new AppSettings(true);
         settings.setRenderer(AppSettings.LWJGL_OPENGL32);
-        settings.setResolution(1024, 768);
+        settings.setResolution(800, 600);
         settings.setFrameRate(60);
 
         app.setSettings(settings);
@@ -55,6 +57,8 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
 
         //faster cam
         flyCam.setMoveSpeed(15f);
+        flyCam.setDragToRotate(true);
+
         cam.setLocation(new Vector3f(7.2f, 3.2f, 4.2f));
         cam.lookAtDirection(new Vector3f(-0.90f, -0.22f, -0.36f), Vector3f.UNIT_Y);
 
@@ -71,8 +75,8 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
         rootNode.attachChild(scene);
         
         //Shadows
-        scene.getChild("Room").setShadowMode(ShadowMode.Receive); // The wall can cast shadows and also receive them.
-        scene.getChild("TV").setShadowMode(ShadowMode.CastAndReceive); // Any shadows cast by the floor would be hidden by it.
+        scene.getChild("Room").setShadowMode(ShadowMode.Receive);
+        scene.getChild("TV").setShadowMode(ShadowMode.CastAndReceive);
         scene.getChild("Table").setShadowMode(ShadowMode.CastAndReceive);
 
         addLighting(scene);
@@ -83,14 +87,14 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
         mediaPlayer.setVideoScreenListener(new VideoScreenAdapter() {});
         Material modelMat = mediaPlayer.getMaterial();
         //Effects
-//        mediaPlayer.getEffectManager().enableScanlineEffect(true);
+        mediaPlayer.getEffectManager().enableScanlineEffect(true);
 //        mediaPlayer.getEffectManager().enableBlackAndWhiteEffect(true);
-//        mediaPlayer.getEffectManager().enableLineEffect(true); //doesn't work
-//        mediaPlayer.getEffectManager().enableGrainEffect(true); //doesn't work
-//        mediaPlayer.getEffectManager().enableVignetteEffect(true); //doesn't work
-        mediaPlayer.getEffectManager().enableLCDEffect(true);
-//        mediaPlayer.getEffectManager().enableVHSEffect(true); //doesn't work
-//        mediaPlayer.getEffectManager().enableCRTEffect(true); //doesn't work
+//        mediaPlayer.getEffectManager().enableLineEffect(true);      // **!
+        mediaPlayer.getEffectManager().enableGrainEffect(true);     // **!
+        mediaPlayer.getEffectManager().enableVignetteEffect(true);  // **!
+//        mediaPlayer.getEffectManager().enableLCDEffect(true);
+//        mediaPlayer.getEffectManager().enableVHSEffect(true);       // **!
+        mediaPlayer.getEffectManager().enableCRTEffect(true);       // **!
 //        mediaPlayer.getEffectManager().enableGlitchEffect(true);
         //Get sub mesh from a model. It was separated from different color during the import
         ((Node) scene.getChild("TV")).getChild("mat2").setMaterial(modelMat);
@@ -118,7 +122,7 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
         //Source FPS. Should be consistent with original FPS. In most cases 25 or 30
         config.framesPerSec = 30;
         //Playback mode. Play once or loop
-        config.playBackMode = SimpleMediaPlayer.PlaybackMode.LOOP;
+        config.playBackMode = PlaybackMode.LOOP;
         //Transparency of the screen. 1 for intro, material and menu geometries. Below 1f for HUD geometries
         config.alpha = 1f;
         
@@ -132,12 +136,10 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
         
         //Light
         DirectionalLight sunLight = new DirectionalLight();
-        sunLight.setColor(ColorRGBA.White.mult(1.5f));
         sunLight.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
         root.addLight(sunLight);
 
         pointLight = new PointLight();
-        pointLight.setColor(ColorRGBA.White.mult(2.5f));
         pointLight.setRadius(10f);
         pointLight.setPosition(new Vector3f(0, 2, 0));
         root.addLight(pointLight);
@@ -147,6 +149,7 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
 
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         fpp.addFilter(dlsf);
+        fpp.addFilter(new FXAAFilter());
         viewPort.addProcessor(fpp);
     }
     
@@ -177,20 +180,13 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
         }
 
         if (name.equals(TOGGLE_PAUSE)) {
-            if (mediaPlayer.isLoaded() && mediaPlayer.isPlaying()) {
-                // enable
-                if (mediaPlayer.isPaused()) {
-                    mediaPlayer.unpauseMedia();
-                } else {
-                    mediaPlayer.pauseMedia();
-                }
+            if (mediaPlayer.isPaused()) {
+                mediaPlayer.unpauseMedia();
+            } else {
+                mediaPlayer.pauseMedia();
             }
         } else if (name.equals(RELOAD_MEDIA)) {
-            if (mediaPlayer.isLoaded() && mediaPlayer.isPlaying()) {
-                mediaPlayer.stopMedia();
-            } else {
-                mediaPlayer.loadAndPlayMedia();
-            }
+            mediaPlayer.loadAndPlayMedia();
         }
     }
 
@@ -208,8 +204,8 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
     
     @Override
     public void destroy() {
+        mediaPlayer.destroy();
         super.destroy();
-        mediaPlayer.stopMedia();
     }
     
     private float osciTime = 0;

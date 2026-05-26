@@ -61,7 +61,7 @@ public class MediaAppState extends BaseAppState {
     @Override
     protected void cleanup(Application app) {
         isDisposed = true;
-        mediaPlayer.stopMedia();
+        mediaPlayer.destroy();
         guiNode.detachChild(screen);
     }
 

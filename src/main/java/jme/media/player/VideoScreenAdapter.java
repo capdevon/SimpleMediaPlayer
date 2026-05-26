@@ -16,9 +16,6 @@ public abstract class VideoScreenAdapter implements VideoScreenListener {
     public void onPrePlay(String screenName) {}
 
     @Override
-    public void onLoopEnd(String screenName) {}
-
-    @Override
     public void onEnd(String screenName) {}
 
 }

@@ -16,20 +16,10 @@ public class MediaPlayerFactory {
 
     private final Application app;
 
-    /**
-     * Main constructor
-     *
-     * @param app
-     */
     public MediaPlayerFactory(Application app) {
         this.app = app;
     }
 
-    /**
-     * 
-     * @param config
-     * @return
-     */
     public SimpleMediaPlayer createMediaPlayer(MediaConfig config) {
 
         // Calculates dimensions of the geometry
@@ -59,10 +49,7 @@ public class MediaPlayerFactory {
         int offsetY = (int) ((quadHeight - height) / 2f);
         screen.setLocalTranslation(new Vector3f(-offsetX, -offsetY, 1));
 
-        SimpleMediaPlayer mediaPlayer = new SimpleMediaPlayer(app, screen, config);
-        // mediaPlayer.loadMedia();
-
-        return mediaPlayer;
+        return new SimpleMediaPlayer(app.getAssetManager(), screen, config);
     }
 
     private Material createScreenMaterial(MediaConfig config) {
