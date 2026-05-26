@@ -3,34 +3,48 @@ package jme.media.player;
 import com.jme3.math.ColorRGBA;
 
 /**
+ * Configuration settings for the media player.
+ *
  * @author capdevon
  */
 public class MediaConfig {
 
-    //Playback mode. Play once or loop
+    /** Playback mode (e.g., play once or loop). */
     public PlaybackMode playBackMode = PlaybackMode.ONCE;
-    //Original movie dimensions - relevant only for keeping aspect ratio
-    public int movieWidth = 1;
-    public int movieHeight = 1;
-    //True if aspect ratio should be kept. False is the movie should be stretched to the screen
-    public boolean keepAspect = false;
-    //Unique name
-    public String screenName = "VideoQuad";
-    //Image to display when player is idle. Null to use screenColor
-    public String idleImagePath;
-    //Image to display when player is loading. Null to use screenColor
-    public String loadingImagePath;
-    //Image to display when player is paused. Null to use screenColor
-    public String pausedImagePath;
-    //Transparency of the screen. 1 for intro, material and menu geometries. Below 1f for HUD geometries
-    public float alpha = 1f;
-    //Color to use if any of above pictures is not provided.
-    public ColorRGBA screenColor = ColorRGBA.Green.clone();
-    //Video to play. Must not be null
-    public String videoFilePath;
-    //Audio to play. Null if no audio
-    public String audioFilePath;
-    //Source FPS. Should be consistent with original FPS. In most cases 25 or 30
-    public int framesPerSec = 30;
 
+    /** Original movie width (used only if {@code keepAspect} is true). */
+    public int movieWidth = 1;
+
+    /** Original movie height (used only if {@code keepAspect} is true). */
+    public int movieHeight = 1;
+
+    /** Whether to preserve the video aspect ratio or stretch it to the screen. */
+    public boolean keepAspect = false;
+
+    /** Unique name for the screen geometry. */
+    public String screenName = "VideoQuad";
+
+    /** Asset path for the idle state texture. If {@code null}, {@code screenColor} is used. */
+    public String idleImagePath;
+
+    /** Asset path for the loading state texture. If {@code null}, {@code screenColor} is used. */
+    public String loadingImagePath;
+
+    /** Asset path for the paused state texture. If {@code null}, {@code screenColor} is used. */
+    public String pausedImagePath;
+
+    /** Opacity of the screen, from 0.0 (transparent) to 1.0 (opaque). */
+    public float alpha = 1f;
+
+    /** Fallback color used when state textures are {@code null}. */
+    public ColorRGBA screenColor = ColorRGBA.Green.clone();
+
+    /** Asset path of the video file to play. Must not be {@code null}. */
+    public String videoFilePath;
+
+    /** Asset path of the audio file. Use {@code null} for no audio. */
+    public String audioFilePath;
+
+    /** Target video frame rate (typically 25 or 30 FPS). */
+    public int framesPerSec = 30;
 }
