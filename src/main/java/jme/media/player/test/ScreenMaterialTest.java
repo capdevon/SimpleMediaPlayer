@@ -87,14 +87,14 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
         mediaPlayer.setVideoScreenListener(new VideoScreenAdapter() {});
         Material modelMat = mediaPlayer.getMaterial();
         //Effects
-        mediaPlayer.getEffectManager().enableScanlineEffect(true);
+//        mediaPlayer.getEffectManager().enableScanlineEffect(true);
 //        mediaPlayer.getEffectManager().enableBlackAndWhiteEffect(true);
-//        mediaPlayer.getEffectManager().enableLineEffect(true);      // **!
+        mediaPlayer.getEffectManager().enableLineEffect(true);      // **!
         mediaPlayer.getEffectManager().enableGrainEffect(true);     // **!
         mediaPlayer.getEffectManager().enableVignetteEffect(true);  // **!
 //        mediaPlayer.getEffectManager().enableLCDEffect(true);
-//        mediaPlayer.getEffectManager().enableVHSEffect(true);       // **!
-        mediaPlayer.getEffectManager().enableCRTEffect(true);       // **!
+        mediaPlayer.getEffectManager().enableVHSEffect(true);       // **!
+//        mediaPlayer.getEffectManager().enableCRTEffect(true);       // **!
 //        mediaPlayer.getEffectManager().enableGlitchEffect(true);
         //Get sub mesh from a model. It was separated from different color during the import
         ((Node) scene.getChild("TV")).getChild("mat2").setMaterial(modelMat);
@@ -181,9 +181,9 @@ public class ScreenMaterialTest extends SimpleApplication implements ActionListe
 
         if (name.equals(TOGGLE_PAUSE)) {
             if (mediaPlayer.isPaused()) {
-                mediaPlayer.unpauseMedia();
+                mediaPlayer.resume();
             } else {
-                mediaPlayer.pauseMedia();
+                mediaPlayer.pause();
             }
         } else if (name.equals(RELOAD_MEDIA)) {
             mediaPlayer.loadAndPlayMedia();

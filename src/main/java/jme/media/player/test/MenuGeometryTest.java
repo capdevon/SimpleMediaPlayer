@@ -8,6 +8,7 @@ import com.jme3.input.event.MouseButtonEvent;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.shape.Quad;
 import com.jme3.system.AppSettings;
 import jme.media.player.MediaConfig;
 import jme.media.player.MediaPlayerFactory;
@@ -32,7 +33,6 @@ public class MenuGeometryTest extends SimpleApplication {
     public static void main(String[] args) {
         MenuGeometryTest app = new MenuGeometryTest();
         AppSettings settings = new AppSettings(true);
-        settings.setRenderer(AppSettings.LWJGL_OPENGL32);
         settings.setResolution(800, 600);
         settings.setFrameRate(60);
 
@@ -87,7 +87,7 @@ public class MenuGeometryTest extends SimpleApplication {
         //Position      
         menuGeo1.setLocalTranslation(cam.getWidth() / 4f - width / 2f, cam.getHeight() * 0.75f - height / 2f, 1.0f);
         //Add to map for picking
-        pickPlayer.put(createRectangle(menuGeo1, mplayer1), mplayer1);
+        pickPlayer.put(createRectangle(menuGeo1), mplayer1);
         mplayersList.add(mplayer1);
         
         //2
@@ -106,7 +106,7 @@ public class MenuGeometryTest extends SimpleApplication {
         //Position      
         menuGeo2.setLocalTranslation(cam.getWidth() * 0.75f - width / 2f, (int) menuGeo1.getLocalTranslation().y, 1.0f);
         //Add to map for picking
-        pickPlayer.put(createRectangle(menuGeo2, mplayer2), mplayer2);
+        pickPlayer.put(createRectangle(menuGeo2), mplayer2);
         mplayersList.add(mplayer2);
         
         //3
@@ -126,7 +126,7 @@ public class MenuGeometryTest extends SimpleApplication {
         //Position      
         menuGeo3.setLocalTranslation(menuGeo1.getLocalTranslation().x, cam.getHeight() / 4f - height / 2f, 1.0f);
         //Add to map for picking
-        pickPlayer.put(createRectangle(menuGeo3, mplayer3), mplayer3);
+        pickPlayer.put(createRectangle(menuGeo3), mplayer3);
         mplayersList.add(mplayer3);
         
         //4
@@ -146,7 +146,7 @@ public class MenuGeometryTest extends SimpleApplication {
         //Position      
         menuGeo4.setLocalTranslation(menuGeo2.getLocalTranslation().x, menuGeo3.getLocalTranslation().y, 1.0f);
         //Add to map for picking
-        pickPlayer.put(createRectangle(menuGeo4, mplayer4), mplayer4);
+        pickPlayer.put(createRectangle(menuGeo4), mplayer4);
         mplayersList.add(mplayer4);
 
         createLabel("960/540 Full image decoration. Loop.", menuGeo1.getLocalTranslation(), margin);
@@ -158,11 +158,14 @@ public class MenuGeometryTest extends SimpleApplication {
         inputManager.addRawInputListener(new MediaPlayerInputListener());
     }
     
-    private Rectangle createRectangle(Geometry geo, SimpleMediaPlayer mediaPlayer) {
+    private Rectangle createRectangle(Geometry geo) {
+
+        Quad quad = (Quad) geo.getMesh();
+
         int x = (int) geo.getLocalTranslation().x;
         int y = (int) geo.getLocalTranslation().y;
-        int width = (int) mediaPlayer.getWidth();
-        int height = (int) mediaPlayer.getHeight();
+        int width = (int) quad.getWidth();
+        int height = (int) quad.getHeight();
         return new Rectangle(x, y, width, height);
     }
     
@@ -193,17 +196,17 @@ public class MenuGeometryTest extends SimpleApplication {
                     SimpleMediaPlayer mediaPlayer = pickPlayer.get(key);
 
                     //Pause the rest if playing
-                    for (SimpleMediaPlayer smp : pickPlayer.values()) {
-                        if (!mediaPlayer.getScreenName().equals(smp.getScreenName()) && smp.isPlaying()) {
-                            smp.pauseMedia();
+                    for (SimpleMediaPlayer mp : pickPlayer.values()) {
+                        if (!mediaPlayer.getScreenName().equals(mp.getScreenName()) && mp.isPlaying()) {
+                            mp.pause();
                         }
                     }
 
                     //enable    
                     if (mediaPlayer.isPaused()) {
-                        mediaPlayer.unpauseMedia();
+                        mediaPlayer.resume();
                     } else if (mediaPlayer.isPlaying()) {
-                        mediaPlayer.pauseMedia();
+                        mediaPlayer.pause();
                     } else if (!mediaPlayer.isLoaded()) {
                         mediaPlayer.loadAndPlayMedia();
                     }

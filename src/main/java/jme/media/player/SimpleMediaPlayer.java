@@ -9,7 +9,6 @@ import com.jme3.audio.AudioSource;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Image;
 import com.jme3.texture.Texture2D;
 import com.jme3.texture.image.ColorSpace;
@@ -65,8 +64,6 @@ public class SimpleMediaPlayer {
 
     private final float fps;
     private final String screenName;
-    private final float movieWidth;
-    private final float movieHeight;
     private String videoAssetPath;
     private String audioAssetPath;
     private final String idleImageAssetPath;
@@ -84,21 +81,12 @@ public class SimpleMediaPlayer {
     }
 
     /**
-     * Constructs a SimpleMediaPlayer configured for the provided application,
+     * Constructs a SimpleMediaPlayer configured for the provided
      * display geometry and media configuration.
      *
-     * <p>This constructor initializes internal state and applies settings from
-     * the supplied {@code MediaConfig}. It configures the screen geometry and
-     * material, sets up effect management and stores media paths and playback
-     * parameters.
-     *
      * @param assetManager the JME3 AssetManager (must not be {@code null})
-     * @param screen the Geometry representing the screen; its mesh
-     *               dimensions are used to determine the movie width and height
-     *               (must not be {@code null})
-     * @param config the {@link MediaConfig} containing media paths, screen name,
-     *               playback mode, FPS and other display settings (must not be
-     *               {@code null})
+     * @param screen the Geometry representing the screen for displaying media (must not be {@code null})
+     * @param config the {@link MediaConfig} containing media configuration parameters (must not be {@code null})
      */
     protected SimpleMediaPlayer(AssetManager assetManager, Geometry screen, MediaConfig config) {
         this.assetManager = assetManager;
@@ -106,9 +94,6 @@ public class SimpleMediaPlayer {
         this.screenMat = screen.getMaterial();
         this.effectManager = new MediaEffectManager(screenMat);
 
-        Quad quad = (Quad) screen.getMesh();
-        this.movieWidth = quad.getWidth();
-        this.movieHeight = quad.getHeight();
         this.screenName = config.screenName;
         this.videoAssetPath = config.videoFilePath;
         this.audioAssetPath = config.audioFilePath;
@@ -129,20 +114,6 @@ public class SimpleMediaPlayer {
     }
 
     /**
-     * @return width of the quad
-     */
-    public float getWidth() {
-        return movieWidth;
-    }
-
-    /**
-     * @return height of the quad
-     */
-    public float getHeight() {
-        return movieHeight;
-    }
-
-    /**
      * @return geometry used for displaying media.
      */
     public Geometry getGeometry() {
@@ -158,6 +129,34 @@ public class SimpleMediaPlayer {
 
     public MediaEffectManager getEffectManager() {
         return effectManager;
+    }
+
+    /**
+     * @return Is currently loading
+     */
+    public boolean isLoading() {
+        return state == State.LOADING;
+    }
+
+    /**
+     * @return Are frames data preloaded.
+     */
+    public boolean isLoaded() {
+        return state != State.IDLE && state != State.LOADING;
+    }
+
+    /**
+     * @return Is playback in action - playing
+     */
+    public boolean isPlaying() {
+        return state == State.PLAYING;
+    }
+
+    /**
+     * @return Is paused
+     */
+    public boolean isPaused() {
+        return state == State.PAUSED;
     }
 
     /**
@@ -222,7 +221,7 @@ public class SimpleMediaPlayer {
     /**
      * Stops media in any state. Also releases any memory resources.
      */
-    public void stopMedia() {
+    public void stop() {
         if (state == State.IDLE) {
             return;
         }
@@ -241,7 +240,11 @@ public class SimpleMediaPlayer {
         if (audioNode != null) {
             audioNode.stop();
         }
+
+        startTime = 0;
         pausePeriod = 0;
+        pauseTime = 0;
+        prevFrameIndex = -1;
         frames.clear();
 
         textureImage = null;
@@ -290,7 +293,7 @@ public class SimpleMediaPlayer {
     /**
      * Play already loaded media. Do not use for unpausing - no effect.
      */
-    public void playMedia() {
+    public void play() {
         if (state != State.LOADED) {
             return;
         }
@@ -298,37 +301,9 @@ public class SimpleMediaPlayer {
     }
 
     /**
-     * @return Is currently loading
-     */
-    public boolean isLoading() {
-        return state == State.LOADING;
-    }
-
-    /**
-     * @return Are frames data preloaded.
-     */
-    public boolean isLoaded() {
-        return state != State.IDLE && state != State.LOADING;
-    }
-
-    /**
-     * @return Is playback in action - playing
-     */
-    public boolean isPlaying() {
-        return state == State.PLAYING;
-    }
-
-    /**
-     * @return Is paused
-     */
-    public boolean isPaused() {
-        return state == State.PAUSED;
-    }
-
-    /**
      * Pauses the media. Displays predefined image or last frame.
      */
-    public void pauseMedia() {
+    public void pause() {
         if (state != State.PLAYING) {
             return;
         }
@@ -349,7 +324,7 @@ public class SimpleMediaPlayer {
     /**
      * Unpause paused media
      */
-    public void unpauseMedia() {
+    public void resume() {
         if (state != State.PAUSED) {
             return;
         }
@@ -439,7 +414,7 @@ public class SimpleMediaPlayer {
         // new frame
         prevFrameIndex = currFrameIndex;
         if (currFrameIndex >= frames.size()) {
-            stopMedia();
+            stop();
         } else {
             setImage(frames.get(currFrameIndex));
         }
@@ -457,33 +432,37 @@ public class SimpleMediaPlayer {
 
 //            texture.setImage(m_AWTLoader.load(image, flipY));
 
-            int width = image.getWidth();
-            int height = image.getHeight();
-
-            if (buffer == null) {
-                buffer = BufferUtils.createByteBuffer(width * height * 3);
-                textureImage = new Image(Image.Format.BGR8, width, height, buffer, ColorSpace.sRGB);
-                videoTexture = new Texture2D(textureImage);
-                screenMat.setTexture("ColorMap", videoTexture);
-                // remove static image
-                screenMat.clearParam("Color");
-            }
-
-            byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-            buffer.clear();
-
-            // flipY is needed because of different coordinate system of jme and awt.
-            int stride = width * 3;
-            for (int r = height - 1; r >= 0; r--) {
-                buffer.put(pixels, r * stride, stride);
-            }
-
-            buffer.flip();
-            textureImage.setUpdateNeeded();
+            updateFrame(image);
 
         } catch (IOException ex) {
             logger.log(Level.SEVERE, ex.getMessage(), ex);
         }
+    }
+
+    private void updateFrame(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        if (buffer == null) {
+            buffer = BufferUtils.createByteBuffer(width * height * 3);
+            textureImage = new Image(Image.Format.BGR8, width, height, buffer, ColorSpace.sRGB);
+            videoTexture = new Texture2D(textureImage);
+            screenMat.setTexture("ColorMap", videoTexture);
+            // remove static image
+            screenMat.clearParam("Color");
+        }
+
+        byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+        buffer.clear();
+
+        // flipY is needed because of different coordinate system of jme and awt.
+        int stride = width * 3;
+        for (int r = height - 1; r >= 0; r--) {
+            buffer.put(pixels, r * stride, stride);
+        }
+
+        buffer.flip();
+        textureImage.setUpdateNeeded();
     }
 
     // -----------------------VideoScreenListener-----------------------

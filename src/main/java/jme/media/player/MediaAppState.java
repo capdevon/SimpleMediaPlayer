@@ -90,7 +90,7 @@ public class MediaAppState extends BaseAppState {
         @Override
         public void onAction(String name, boolean isPressed, float tpf) {
             if (!isPressed) {
-                mediaPlayer.stopMedia();
+                mediaPlayer.stop();
             }
         }
     };
