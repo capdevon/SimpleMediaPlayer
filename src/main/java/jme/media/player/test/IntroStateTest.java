@@ -50,11 +50,9 @@ public class IntroStateTest extends SimpleApplication {
 
         //Config
         MediaConfig config = new MediaConfig();
-        //Original movie dimensions - relevant only for keeping aspect ratio
         config.movieWidth = 640;
         config.movieHeight = 480;
-        //True if aspect ratio should be kept. False is the movie should be stretched to the screen 
-//        config.keepAspect = true;
+        config.keepAspect = true;
         //Unique name
         config.screenName = "Intro";
         //Image to display when player is idle. Null to use screenColor
