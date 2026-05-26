@@ -223,4 +223,10 @@ public class MenuGeometryTest extends SimpleApplication {
         mplayersList.forEach(mp -> mp.update(tpf));
     }
 
+    @Override
+    public void destroy() {
+        mplayersList.forEach(mp -> mp.destroy());
+        super.destroy();
+    }
+
 }
