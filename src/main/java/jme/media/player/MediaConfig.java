@@ -10,13 +10,12 @@ public class MediaConfig {
     //Playback mode. Play once or loop
     public PlaybackMode playBackMode = PlaybackMode.ONCE;
     //Original movie dimensions - relevant only for keeping aspect ratio
-    public int movieWidth;
-    public int movieHeight;
-    public float zoomingFactor = 1f;
+    public int movieWidth = 1;
+    public int movieHeight = 1;
     //True if aspect ratio should be kept. False is the movie should be stretched to the screen
-    public boolean keepAspect;
+    public boolean keepAspect = false;
     //Unique name
-    public String screenName = "Screen";
+    public String screenName = "VideoQuad";
     //Image to display when player is idle. Null to use screenColor
     public String idleImagePath;
     //Image to display when player is loading. Null to use screenColor
@@ -26,7 +25,7 @@ public class MediaConfig {
     //Transparency of the screen. 1 for intro, material and menu geometries. Below 1f for HUD geometries
     public float alpha = 1f;
     //Color to use if any of above pictures is not provided.
-    public ColorRGBA screenColor = ColorRGBA.Black.clone();
+    public ColorRGBA screenColor = ColorRGBA.Green.clone();
     //Video to play. Must not be null
     public String videoFilePath;
     //Audio to play. Null if no audio
