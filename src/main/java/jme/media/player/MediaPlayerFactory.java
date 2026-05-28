@@ -3,6 +3,7 @@ package jme.media.player;
 import com.jme3.app.Application;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
@@ -39,13 +40,13 @@ public class MediaPlayerFactory {
         }
 
         Geometry screen = new Geometry(config.screenName, new Quad(quadWidth, quadHeight));
-        Material mat = createScreenMaterial(config);
+        Material mat = createScreenMaterial(config.screenColor, config.idleImagePath);
         screen.setMaterial(mat);
 
         // Setup screen location
-        float offsetX = (screenWidth - quadWidth) / 2f;
-        float offsetY = (screenHeight - quadHeight) / 2f;
-        screen.setLocalTranslation(new Vector3f(offsetX, offsetY, 1));
+        float x = (screenWidth - quadWidth) / 2f;
+        float y = (screenHeight - quadHeight) / 2f;
+        screen.setLocalTranslation(new Vector3f(x, y, 1));
 
         if (config.alpha > 0f && config.alpha < 1f) {
             // Set transparency
@@ -57,15 +58,15 @@ public class MediaPlayerFactory {
         return new SimpleMediaPlayer(app.getAssetManager(), screen, config);
     }
 
-    private Material createScreenMaterial(MediaConfig config) {
+    private Material createScreenMaterial(ColorRGBA color, String texturePath) {
 
         // material and texture
         Material mat = new Material(app.getAssetManager(), "MatDefs/SimpleMediaPlayer/SimpleMediaPlayer.j3md");
 
-        if (config.idleImagePath != null) {
-            mat.setTexture("ColorMap", app.getAssetManager().loadTexture(config.idleImagePath));
+        if (texturePath != null) {
+            mat.setTexture("ColorMap", app.getAssetManager().loadTexture(texturePath));
         } else {
-            mat.setColor("Color", config.screenColor);
+            mat.setColor("Color", color);
         }
 
         return mat;
