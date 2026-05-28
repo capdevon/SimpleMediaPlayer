@@ -45,7 +45,7 @@ public class SimpleMediaPlayer {
     private ExecutorService executor;
     private Future<?> loadingResult;
 
-    private State state = State.IDLE;
+    private PlayerState playerState = PlayerState.IDLE;
     private boolean playOnLoad;
 
     private int prevFrameIndex = -1;
@@ -71,7 +71,7 @@ public class SimpleMediaPlayer {
     private final String pausedImageAssetPath;
     private final ColorRGBA screenColor;
 
-    private enum State {
+    private enum PlayerState {
         IDLE,       // Player is idle, no media loaded, idle image or screen color displayed
         LOADING,    // Media is being loaded, loading image displayed
         LOADED,     // Media loaded and ready to play, idle image or screen color displayed
@@ -135,28 +135,28 @@ public class SimpleMediaPlayer {
      * @return Is currently loading
      */
     public boolean isLoading() {
-        return state == State.LOADING;
+        return playerState == PlayerState.LOADING;
     }
 
     /**
      * @return Are frames data preloaded.
      */
     public boolean isLoaded() {
-        return state != State.IDLE && state != State.LOADING;
+        return playerState != PlayerState.IDLE && playerState != PlayerState.LOADING;
     }
 
     /**
      * @return Is playback in action - playing
      */
     public boolean isPlaying() {
-        return state == State.PLAYING;
+        return playerState == PlayerState.PLAYING;
     }
 
     /**
      * @return Is paused
      */
     public boolean isPaused() {
-        return state == State.PAUSED;
+        return playerState == PlayerState.PAUSED;
     }
 
     /**
@@ -192,13 +192,13 @@ public class SimpleMediaPlayer {
 
         frames.clear();
         loadingResult = executor.submit(new LoadingTask());
-        state = State.LOADING;
+        playerState = PlayerState.LOADING;
     }
 
     private void startMedia() {
         // If audio is present starts syncing - listening for audio to start
         if (audioNode != null) {
-            state = State.SYNCING;
+            playerState = PlayerState.SYNCING;
             audioNode.play();
         } else {
             startVideo();
@@ -215,17 +215,17 @@ public class SimpleMediaPlayer {
         notifyOnPrePlay();
         startTime = System.currentTimeMillis();
         prevFrameIndex = -1;
-        state = State.PLAYING;
+        playerState = PlayerState.PLAYING;
     }
 
     /**
      * Stops media in any state. Also releases any memory resources.
      */
     public void stop() {
-        if (state == State.IDLE) {
+        if (playerState == PlayerState.IDLE) {
             return;
         }
-        if (state == State.LOADING) {
+        if (playerState == PlayerState.LOADING) {
             abortLoading();
             return;
         }
@@ -233,7 +233,7 @@ public class SimpleMediaPlayer {
         shutdownMediaResources();
         setStaticImage(idleImageAssetPath);
         notifyOnEnd();
-        state = State.IDLE;
+        playerState = PlayerState.IDLE;
     }
 
     private void shutdownMediaResources() {
@@ -270,7 +270,7 @@ public class SimpleMediaPlayer {
      * Initiate loading task and play afterward. Preferred way to start playback.
      */
     public void loadAndPlayMedia() {
-        if (state != State.IDLE && state != State.LOADED) {
+        if (playerState != PlayerState.IDLE && playerState != PlayerState.LOADED) {
             return;
         }
 
@@ -282,7 +282,7 @@ public class SimpleMediaPlayer {
      * Initiate loading task without playing. Use playMedia() afterward.
      */
     public void loadMedia() {
-        if (state != State.IDLE && state != State.LOADED) {
+        if (playerState != PlayerState.IDLE && playerState != PlayerState.LOADED) {
             return;
         }
 
@@ -294,7 +294,7 @@ public class SimpleMediaPlayer {
      * Play already loaded media. Do not use for unpausing - no effect.
      */
     public void play() {
-        if (state != State.LOADED) {
+        if (playerState != PlayerState.LOADED) {
             return;
         }
         startMedia();
@@ -304,7 +304,7 @@ public class SimpleMediaPlayer {
      * Pauses the media. Displays predefined image or last frame.
      */
     public void pause() {
-        if (state != State.PLAYING) {
+        if (playerState != PlayerState.PLAYING) {
             return;
         }
 
@@ -317,7 +317,7 @@ public class SimpleMediaPlayer {
             audioNode.pause();
         }
 
-        state = State.PAUSED;
+        playerState = PlayerState.PAUSED;
         pauseTime = System.currentTimeMillis();
     }
 
@@ -325,11 +325,11 @@ public class SimpleMediaPlayer {
      * Unpause paused media
      */
     public void resume() {
-        if (state != State.PAUSED) {
+        if (playerState != PlayerState.PAUSED) {
             return;
         }
 
-        state = State.PLAYING;
+        playerState = PlayerState.PLAYING;
         pausePeriod = pausePeriod + System.currentTimeMillis() - pauseTime;
 
         // re-establish texture
@@ -351,21 +351,21 @@ public class SimpleMediaPlayer {
     public void update(float tpf) {
         // Check if loading is done and notify about it.
         // Start media if playOnLoad is true, otherwise just change state to LOADED.
-        if (state == State.LOADING && loadingResult != null && loadingResult.isDone()) {
+        if (playerState == PlayerState.LOADING && loadingResult != null && loadingResult.isDone()) {
             notifyOnLoaded();
             if (playOnLoad) {
                 startMedia();
             } else {
-                state = State.LOADED;
+                playerState = PlayerState.LOADED;
             }
         }
 
         // If syncing, check if audio started and start video.
         // If playing, calculate current frame.
-        if (state == State.SYNCING) {
+        if (playerState == PlayerState.SYNCING) {
             syncAudioAndVideo();
 
-        } else if (state == State.PLAYING) {
+        } else if (playerState == PlayerState.PLAYING) {
             calcFrame();
         }
     }
@@ -377,7 +377,7 @@ public class SimpleMediaPlayer {
         }
 
         frames.clear();
-        state = State.IDLE;
+        playerState = PlayerState.IDLE;
     }
 
     public void destroy() {
@@ -416,12 +416,12 @@ public class SimpleMediaPlayer {
         if (currFrameIndex >= frames.size()) {
             stop();
         } else {
-            setImage(frames.get(currFrameIndex));
+            decodeFrame(frames.get(currFrameIndex));
         }
     }
 
     // Main method to convert jpg to texture.
-    private void setImage(byte[] jpegBytes) {
+    private void decodeFrame(byte[] jpegBytes) {
 
         if (jpegBytes == null) {
             return;
@@ -429,19 +429,20 @@ public class SimpleMediaPlayer {
 
         try (ByteArrayInputStream bais = new ByteArrayInputStream(jpegBytes)) {
             BufferedImage image = ImageIO.read(bais);
-
 //            texture.setImage(m_AWTLoader.load(image, flipY));
 
-            updateFrame(image);
+            int width = image.getWidth();
+            int height = image.getHeight();
+            byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+
+            setImage(width, height, pixels);
 
         } catch (IOException ex) {
             logger.log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
 
-    private void updateFrame(BufferedImage image) {
-        int width = image.getWidth();
-        int height = image.getHeight();
+    private void setImage(int width, int height, byte[] pixels) {
 
         if (buffer == null) {
             buffer = BufferUtils.createByteBuffer(width * height * 3);
@@ -452,7 +453,6 @@ public class SimpleMediaPlayer {
             screenMat.clearParam("Color");
         }
 
-        byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
         buffer.clear();
 
         // flipY is needed because of different coordinate system of jme and awt.
